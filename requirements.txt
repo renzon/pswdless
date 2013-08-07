@@ -1,0 +1,8 @@
+Babel==0.9.6
+argparse==1.2.1
+gaebusiness==2.1.1
+gaegraph==1.2.1
+mommygae==1.0
+pytz==2013b
+wsgiref==0.1.2
+zenwarch==2.0

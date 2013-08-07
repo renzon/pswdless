@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <style>
+        form.form-inline {
+            margin: 0 0 0 0;
+        }
+
+        footer {
+            background-color: #d6e9c6;
+            padding: 20px 0 20px 0;
+        }
+
+        header{
+            background-color: #333;
+        }
+        header .navbar{
+            width: 1172px;
+            margin: auto;
+        }
+    </style>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+    {% block head %}
+
+        <title>NoPassword</title>
+
+        <meta name="description" content="">
+
+
+
+
+        {#  <!-- Fav and touch icons -->#}
+        {#       <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">#}
+        {#       <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">#}
+        {#       <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">#}
+        {#       <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">#}
+        {#       <link rel="shortcut icon" href="img/favicon.png">#}
+
+
+    {% endblock %}
+</head></div>
+{% macro select_navbar(selected='HOME') %}
+
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <a data-target=".navbar-responsive-collapse" data-toggle="collapse"
+                   class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span
+                        class="icon-bar"></span></a> <a href="#" class="brand">NoPassword</a>
+
+                <div class="nav-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav">
+                        <li {% if selected == 'HOME' %}class="active"{% endif %}>
+                            <a href="/">{% trans %}Home{% endtrans %}</a>
+                        </li>
+                        <li {% if selected == 'SITES' %}class="active"{% endif %}>
+                            <a href="/sites">{% trans %}My Sites{% endtrans %}</a>
+                        </li>
+                        <li {% if selected == 'API' %}class="active"{% endif %}>
+                            <a href="/api">{% trans %}API{% endtrans %}</a>
+                        </li>
+                        <li {% if selected == 'LANGUAGES' %}class="active"{% endif %}>
+                            <a href="/languages">{% trans %}Languages{% endtrans %}</a>
+                        </li>
+
+                    </ul>
+                    <div class="pull-right">
+                        <form class="form-inline" action="/login" method="post">
+                            <input type="text" class="input-medium"
+                                   name="email"
+                                   placeholder="{% trans %}Type your email{% endtrans %}">
+                            <button type="submit" class="btn btn-success">{% trans %}
+                                Login {% endtrans %}</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+<body>
+<header>
+        {% block navbar %}{{ select_navbar() }}{% endblock %}
+</header>
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="span4">
+                English - <a href="#">{% trans %}Change Language{% endtrans %}</a>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

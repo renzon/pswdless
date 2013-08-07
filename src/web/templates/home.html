@@ -1,0 +1,64 @@
+{% extends "templates/base.html" %}
+{% block body %}
+    <div class="hero-unit">
+        <h1>
+            {% trans %} Login with NoPassword!{% endtrans %}
+        </h1>
+
+        <p>
+            {% trans %}Improve your site's User Experience not asking users for a password that will be
+                forgotten!{% endtrans %}
+        </p>
+
+        <p>
+            {% trans %}Don't worry with hash, salt, captchas nor "forgot your password" anymore. Use NoPassword REST API
+                and focus on your awesome site! NoPassword is the lean approach for your login system.{% endtrans %}
+        </p>
+
+        <p>
+            <a class="btn btn-primary btn-large" href="#">{% trans %}Register Your Site Now {% endtrans %} »</a>
+        </p>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h2>
+                {% trans %}Free Service {% endtrans %}
+            </h2>
+
+            <p>
+                {% trans %}NoPassword is now a free service. More than that, it is Open Source.{% endtrans %}
+            </p>
+
+            <p>
+                <a class="btn btn-success" href="https://github.com/renzon/nopasswd" target="_blank">{% trans %} Check on GitHub{% endtrans %} »</a>
+            </p>
+        </div>
+        <div class="span4">
+            <h2>
+                {% trans %}Internationalization{% endtrans %}
+            </h2>
+
+            <p>
+                {% trans %}Available in English or Portuguese (Brazil). Not your language? {% endtrans %}
+            </p>
+
+            <p>
+                <a class="btn btn-success" href="#">{% trans %}Translate NoPassword{% endtrans %} »</a>
+            </p>
+        </div>
+        <div class="span4">
+            <h2>
+                {% trans %}REST API{% endtrans %}
+            </h2>
+
+            <p>
+                {% trans %}Simple and documented REST API.{% endtrans %}
+            </p>
+
+            <p>
+                <a class="btn btn-success" href="#">{% trans %} API Documentantion{% endtrans %} »</a>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

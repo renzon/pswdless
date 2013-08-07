@@ -1,0 +1,84 @@
+{% extends "templates/base.html" %}
+{% block head %}
+    <style>
+        .diagram {
+            border: solid 1px;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+{% block navbar %}{{ select_navbar('API') }}{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="span12">
+            <h1>{% trans %}API Documentation{% endtrans %}</h1>
+
+            <p>
+                {% trans %} This documentation provides the necessary information
+                    for NoPassword integration on websites. It is supposed that people reading the docs
+                    has a basic knowledge about HTTP GET and POST calls.{% endtrans %}
+            </p>
+
+            <h2>{% trans %}Table of Contents{% endtrans %}</h2>
+            <ol>
+                <li><a href="#overview">{% trans %}Overview{% endtrans %}</a></li>
+                <li><a href="#register-sites">{% trans %}Registering Sites{% endtrans %}</a></li>
+            </ol>
+        </div>
+    </div>
+    <hr />
+    <div class="row" id="overview">
+        <div class="span12">
+            <h3>{% trans %}Overview{% endtrans %}</h3>
+            <div class="row">
+                <div class="span6">
+                    <p>{% trans %} The sequence diagram on right shows the overview schema of
+                        authentication. It contains the following steps:{% endtrans %}
+                    <ol>
+                        <li>
+                            {% trans %} After registering your site, you can make a HTTP Post call
+                                to NoPassword with user email or id;{% endtrans %}
+                        </li>
+                        <li>
+                            {% trans %} NoPassword send to user an email containing a secure login link;{% endtrans %}
+                        </li>
+                        <li>
+                            {% trans %} User clicks on login link;{% endtrans %}
+                        </li>
+                        <li>
+                            {% trans %} NoPassword send a HTTP Get call to your site so you know she logged
+                                in;{% endtrans %}
+                        </li>
+                        <li>
+                            {% trans %} Your site send a HTTP Get call to NoPassword asking for user id and
+                                email;{% endtrans %}
+                        </li>
+                        <li>
+                            {% trans %} After receiving user data, you log the user in and show your welcome
+                                page;{% endtrans %}
+                        </li>
+                    </ol>
+                    </p>
+                    <p>{% trans %}Each step, including parameters and response formats, will be explained in detail on following sections.{% endtrans %}</p>
+                </div>
+                <div class="span6">
+                    <div class="center">
+                        <img class="diagram" src="/static/img/auth_seq.png" alt="Authentication Sequence Diagram"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row" id="register-sites">
+        <div class="span12">
+            <h3>{% trans %}Registering Sites{% endtrans %}</h3>
+            <p>Prior to make API calls, you need to <a target="_blank">register</a> the site where you intend to use NoPassword.
+                After the registration, a token will be assigned to your site and it will be used on every call.
+            </p>
+        </div>
+    </div>
+{% endblock %}

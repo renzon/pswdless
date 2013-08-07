@@ -1,0 +1,12 @@
+{% extends "templates/base.html" %}
+{% block navbar %}{{ select_navbar('LANGUAGES') }}{% endblock %}
+{% block body %}
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="well">
+                <h1>{% trans %}Languages{% endtrans %}</h1>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

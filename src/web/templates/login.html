@@ -1,0 +1,14 @@
+{% extends "templates/base.html" %}
+{% block navbar %}{{ select_navbar('API') }}{% endblock %}
+{% block body %}
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="well">
+                <h1>{% trans %}Login Message{% endtrans %}</h1>
+                <p>
+                    {% trans %} Check your email. NoPassword will send you a link so you can login.{% endtrans %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

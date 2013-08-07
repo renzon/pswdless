@@ -1,4 +1,4 @@
-pswdless
+nopasswd
 ========
 
-A password-less login service. Written in Python using Google App Engine 
+Simple Login through email with no password need
