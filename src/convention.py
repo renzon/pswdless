@@ -3,6 +3,8 @@ from __future__ import absolute_import, unicode_literals
 import sys
 import os
 #Put lib on path, once Google App Engine does not allow doing it directly
+import settings
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 
 from webapp2_extras import i18n
@@ -38,6 +40,7 @@ class BaseHandler(webapp2.RequestHandler):
         i18n.get_i18n().set_locale(locale)
 
         def write_tmpl(template_name, values={}):
+            values['APP_NAME']=settings.APP_NAME
             return self.response.write(tmpl.render(template_name, values))
 
         convention_params = {"_req": self.request,

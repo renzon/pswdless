@@ -18,7 +18,7 @@
 
             <p>
                 {% trans %} This documentation provides the necessary information
-                    for NoPassword integration on websites. It is supposed that people reading the docs
+                    for {{ APP_NAME }} integration on websites. It is supposed that people reading the docs
                     has a basic knowledge about HTTP GET and POST calls.{% endtrans %}
             </p>
 
@@ -40,20 +40,20 @@
                     <ol>
                         <li>
                             {% trans %} After registering your site, you can make a HTTP Post call
-                                to NoPassword with user email or id;{% endtrans %}
+                                to {{ APP_NAME }} with user email or id;{% endtrans %}
                         </li>
                         <li>
-                            {% trans %} NoPassword send to user an email containing a secure login link;{% endtrans %}
+                            {% trans %} {{ APP_NAME }} send an email to user containing a secure login link;{% endtrans %}
                         </li>
                         <li>
                             {% trans %} User clicks on login link;{% endtrans %}
                         </li>
                         <li>
-                            {% trans %} NoPassword send a HTTP Get call to your site so you know she logged
+                            {% trans %} {{ APP_NAME }} send a HTTP Get call to your site so you know she logged
                                 in;{% endtrans %}
                         </li>
                         <li>
-                            {% trans %} Your site send a HTTP Get call to NoPassword asking for user id and
+                            {% trans %} Your site send a HTTP Get call to {{ APP_NAME }} asking for user id and
                                 email;{% endtrans %}
                         </li>
                         <li>
@@ -76,7 +76,7 @@
     <div class="row" id="register-sites">
         <div class="span12">
             <h3>{% trans %}Registering Sites{% endtrans %}</h3>
-            <p>Prior to make API calls, you need to <a target="_blank">register</a> the site where you intend to use NoPassword.
+            <p>Prior to make API calls, you need to <a target="_blank">register</a> the site where you intend to use {{ APP_NAME }}.
                 After the registration, a token will be assigned to your site and it will be used on every call.
             </p>
         </div>
