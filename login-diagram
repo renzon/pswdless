@@ -1,0 +1,10 @@
+http://www.websequencediagrams.com/
+title Authentication Sequence
+
+User->Your Site: Loging Request
+Your Site->Password-less: Login Request
+Password-less->User: Send Email
+User->Password-less: Click on Login Link
+Password-less->Your Site: User Logged in
+Your Site->Password-less: Retrieve User Details
+Your Site->User: Show Welcome Page

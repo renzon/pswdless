@@ -19,7 +19,7 @@
             background-color: #333;
         }
         header .navbar{
-            width: 1172px;
+            max-width: 1172px;
             margin: auto;
         }
     </style>
@@ -62,7 +62,7 @@
                         <li {% if selected == 'SITES' %}class="active"{% endif %}>
                             <a href="/sites">{% trans %}My Sites{% endtrans %}</a>
                         </li>
-                        <li {% if selected == 'API' %}class="active"{% endif %}>
+                        <li {% if selected == 'API' %} class="active"{% endif %}>
                             <a href="/api">{% trans %}API{% endtrans %}</a>
                         </li>
                         <li {% if selected == 'LANGUAGES' %}class="active"{% endif %}>

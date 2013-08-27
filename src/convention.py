@@ -41,6 +41,7 @@ class BaseHandler(webapp2.RequestHandler):
 
         def write_tmpl(template_name, values={}):
             values['APP_NAME']=settings.APP_NAME
+            values['APP_HOST']=settings.APP_HOST
             return self.response.write(tmpl.render(template_name, values))
 
         convention_params = {"_req": self.request,

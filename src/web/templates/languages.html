@@ -1,12 +1,31 @@
 {% extends "templates/base.html" %}
 {% block navbar %}{{ select_navbar('LANGUAGES') }}{% endblock %}
 {% block body %}
-    <div class="row-fluid">
+    <div class="row">
         <div class="span12">
-            <div class="well">
-                <h1>{% trans %}Languages{% endtrans %}</h1>
+            <h1>{% trans %}Languages{% endtrans %}</h1>
 
-            </div>
+            {% trans %}<p>
+                For now {{ APP_NAME }} has only to available languages: en_US and pt_BR. But you can contribute
+                translating it for your language</p>
+                <p> The internationalization is made using
+                    <a target="_blank" href="http://babel.edgewall.org">Babel</a>. To include a new language, add it on
+                    <a target="_blank"
+                       href="https://github.com/renzon/pswdless/blob/master/src/settings.py">settings.py</a>
+                    and run<a target="_blank" href="https://github.com/renzon/pswdless/blob/master/i18n/make_files.py">make_files.py</a>
+                    script. It will create a folder with the language name on
+                    <a target="_blank" href="https://github.com/renzon/pswdless/tree/master/i18n/locale">locale</a> the
+                    messages.po file. You use this file to make the translation. See
+                    <a target="_blank"
+                       href="https://github.com/renzon/pswdless/blob/master/i18n/locale/pt_BR/LC_MESSAGES/messages.po">pt_BR</a>
+                    file as example.
+                </p>
+                <p>After finishing the translation, run make_file.py again so it all the information.</p>
+                <p>If you become a translator and the {{ APP_NAME }} begin to charge for the service in the future, you will be on the VIP list so you will be able to use the service for free!</p>
+            {% endtrans %}
+
+
         </div>
     </div>
+
 {% endblock %}

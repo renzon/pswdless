@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import os
+import settings
 
 
 def create_or_update_catalog(loc, compile_target, msgs_pot):
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     msgs_pot = os.path.join(compile_target, "messages.pot")
 
     os.system("pybabel extract -F %s -o %s %s" % (babel_cfg, msgs_pot, target))
-    locales = ["en_US", "pt_BR"]
+    locales = settings.LOCALES
     for loc in locales:
         create_or_update_catalog(loc, compile_target, msgs_pot)
 

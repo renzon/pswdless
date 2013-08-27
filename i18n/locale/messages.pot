@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-07-02 17:19-0300\n"
+"POT-Creation-Date: 2013-08-27 17:47-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,316 @@ msgstr ""
 msgid "Hello"
 msgstr ""
 
-#: ../src/web/templates/home.html:7
-msgid "World!"
+#: ../src/web/templates/api_home.html:17
+msgid "API Documentation"
 msgstr ""
 
-#: ../src/web/templates/home.html:8
-msgid "Nice"
+#: ../src/web/templates/api_home.html:20
+#, python-format
+msgid ""
+" This documentation provides the necessary information\n"
+"                    for %(APP_NAME)s integration on websites. It is "
+"supposed that people reading these docs\n"
+"                    has basic knowledge about HTTP GET and POST calls and"
+" JSON."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:25
+msgid "Table of Contents"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:27 ../src/web/templates/api_home.html:35
+msgid "Overview"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:28 ../src/web/templates/api_home.html:153
+msgid "Registering Sites"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:39
+msgid ""
+" The sequence diagram on right shows the overview schema of\n"
+"                        authentication. It contains the following steps:"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:43
+#, python-format
+msgid ""
+" After registering your site, you can make a HTTP Post call\n"
+"                                to %(APP_NAME)s with user email or id;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:47
+#, python-format
+msgid ""
+" %(APP_NAME)s send an email to user containing a secure login\n"
+"                                link;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:51
+msgid " User clicks on login link;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:54
+#, python-format
+msgid ""
+" %(APP_NAME)s send a HTTP Get call to your site so you know she logged\n"
+"                                in;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:58
+#, python-format
+msgid ""
+" Your site send a HTTP Get call to %(APP_NAME)s asking for user id and\n"
+"                                email;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:62
+msgid ""
+" After receiving user data, you log the user in and show your welcome\n"
+"                                page;"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:67
+msgid ""
+"Each step, including parameters and response formats, will be explained "
+"in detail on\n"
+"                        following sections."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:70
+msgid ""
+"<a href=\"#table_summary\">Table 1</a> shows all the available REST api. "
+"The return\n"
+"                        format is JSON."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:84
+msgid ""
+"Table 1 - Summary\n"
+"                        Calls"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:90
+msgid "Call"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:91
+msgid "Parameters"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:92
+msgid "Return"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:93
+msgid "Description"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:99
+#, python-format
+msgid ""
+"<h4>Required</h4>\n"
+"                                    <b>token (String)</b> - the "
+"registered domain token;<br/>\n"
+"                                    <b>hook (String)</b> - the address on"
+" your website which %(APP_NAME)s will make a\n"
+"                                    post call indicating user has logged "
+"in.<br/>\n"
+"                                    <h4>Optional</h4>\n"
+"                                    <b>email (String)</b> - user's email."
+" Ignored if id is present;<br/>\n"
+"                                    <b>id (String)</b> - user's id on "
+"%(APP_NAME)s;<br/>\n"
+"                                    <b>lang (String)</b> - The language "
+"%(APP_NAME)s must use on email. Available\n"
+"                                    values: en_US (English) and pt_BR "
+"(Brazilian Portuguese). Default:\n"
+"                                    en_US."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:110
+msgid ""
+"JSON containing the ticket of the login call. Ex:\n"
+"                                    {ticket:\"123456\"}."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:112
+msgid ""
+"This call will send user an email containing the login link. One of id or"
+"\n"
+"                                    email must be sent. If the two are "
+"specified, id will be used to identify the user\n"
+"                                    instead of email.\n"
+"                                    Returns a ticket so your website can "
+"certify that it has done this\n"
+"                                    call."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:120
+msgid ""
+"<h4>Required</h4>\n"
+"                                    <b>ticket (String)</b> - the ticket "
+"sent login call;<br/>\n"
+"                                "
+msgstr ""
+
+#: ../src/web/templates/api_home.html:124
+msgid ""
+" Your site need to sent a 200 HTTP status code. Any message sent is\n"
+"                                    ignored "
+msgstr ""
+
+#: ../src/web/templates/api_home.html:126
+#, python-format
+msgid ""
+"After user click on link sent by email, %(APP_NAME)s will make a Post\n"
+"                                    call on the hook defined on login "
+"phase containing the ticket number. This ticket\n"
+"                                    can be used to retrieve user's detail"
+" from %(APP_NAME)s."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:132
+msgid ""
+"<h4>Required</h4>\n"
+"                                    <b>token (String)</b> - the "
+"registered domain token;<br/>\n"
+"                                    <b>ticket (String)</b> - the code "
+"sent to your hook url.<br/>\n"
+"                                "
+msgstr ""
+
+#: ../src/web/templates/api_home.html:137
+msgid ""
+"JSON containing user's details. Ex:\n"
+"                                    {id:\"654321\",email:\"foo@bar.com\"}."
+msgstr ""
+
+#: ../src/web/templates/api_home.html:139
+msgid ""
+"This call returns the user's details that can save in your site. The id\n"
+"                                    of a user will never change, so you "
+"can use it as a strong\n"
+"                                    reference. After this call, you can "
+"save cookies on user's browser to keep she logged."
+msgstr ""
+
+#: ../src/web/templates/base.html:60
+msgid "Home"
+msgstr ""
+
+#: ../src/web/templates/base.html:63 ../src/web/templates/sites.html:7
+msgid "My Sites"
+msgstr ""
+
+#: ../src/web/templates/base.html:66
+msgid "API"
+msgstr ""
+
+#: ../src/web/templates/base.html:69 ../src/web/templates/languages.html:6
+msgid "Languages"
+msgstr ""
+
+#: ../src/web/templates/base.html:77
+msgid "Type your email"
+msgstr ""
+
+#: ../src/web/templates/base.html:78
+msgid ""
+"\n"
+"                                Login "
+msgstr ""
+
+#: ../src/web/templates/base.html:100
+msgid "Change Language"
+msgstr ""
+
+#: ../src/web/templates/home.html:5
+msgid " Password-less Login!"
+msgstr ""
+
+#: ../src/web/templates/home.html:9
+msgid ""
+"Improve your site's User Experience not asking users for a password that "
+"will be\n"
+"                forgotten!"
+msgstr ""
+
+#: ../src/web/templates/home.html:14
+#, python-format
+msgid ""
+"Don't worry with hash, salt, captchas nor \"forgot your password\" "
+"anymore. Use %(APP_NAME)s REST API\n"
+"                and focus on your awesome site! %(APP_NAME)s is the lean "
+"approach for your login system."
+msgstr ""
+
+#: ../src/web/templates/home.html:19
+msgid "Register Your Site Now "
+msgstr ""
+
+#: ../src/web/templates/home.html:25
+msgid "Free Service "
+msgstr ""
+
+#: ../src/web/templates/home.html:29
+#, python-format
+msgid "%(APP_NAME)s is now a free service. More than that, it is Open Source."
+msgstr ""
+
+#: ../src/web/templates/home.html:33
+msgid " Check on GitHub"
+msgstr ""
+
+#: ../src/web/templates/home.html:38
+msgid "Internationalization"
+msgstr ""
+
+#: ../src/web/templates/home.html:42
+msgid "Available in English or Portuguese (Brazil). Not your language? "
+msgstr ""
+
+#: ../src/web/templates/home.html:46
+#, python-format
+msgid "Translate %(APP_NAME)s"
+msgstr ""
+
+#: ../src/web/templates/home.html:51
+msgid "REST API"
+msgstr ""
+
+#: ../src/web/templates/home.html:55
+msgid "Simple and documented REST API."
+msgstr ""
+
+#: ../src/web/templates/home.html:59
+msgid " API Documentantion"
+msgstr ""
+
+#: ../src/web/templates/languages.html:7
+#, python-format
+msgid "For now %(APP_NAME)s has only to available languages: en_US and pt_BR"
+msgstr ""
+
+#: ../src/web/templates/login.html:7
+msgid "Login Message"
+msgstr ""
+
+#: ../src/web/templates/login.html:9
+#, python-format
+msgid " Check your email. %(APP_NAME)s will send you a link so you can login."
+msgstr ""
+
+#: ../src/web/templates/sites.html:13
+msgid "Domain"
+msgstr ""
+
+#: ../src/web/templates/sites.html:14
+msgid "Login Redirect URL"
+msgstr ""
+
+#: ../src/web/templates/sites.html:15
+msgid "Token"
 msgstr ""
 
