@@ -15,16 +15,26 @@
             padding: 20px 0 20px 0;
         }
 
-        header{
+        header {
             background-color: #333;
         }
-        header .navbar{
+
+        header .navbar {
             max-width: 1172px;
             margin: auto;
         }
     </style>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var $form=$('#lang_form')
+            $('#lang_select').change(function(){
+                $form.submit();
+            });
+        });
+
+    </script>
 
     {% block head %}
 
@@ -44,7 +54,8 @@
 
 
     {% endblock %}
-</head></div>
+</head>
+</div>
 {% macro select_navbar(selected='HOME') %}
 
     <div class="navbar navbar-inverse">
@@ -88,7 +99,7 @@
 
 <body>
 <header>
-        {% block navbar %}{{ select_navbar() }}{% endblock %}
+    {% block navbar %}{{ select_navbar() }}{% endblock %}
 </header>
 <div class="container">
     {% block body %}{% endblock %}
@@ -97,7 +108,18 @@
     <div class="container">
         <div class="row">
             <div class="span4">
-                English - <a href="#">{% trans %}Change Language{% endtrans %}</a>
+
+                <form id="lang_form" action="/languages/change" method="post">
+                    {% set available_langs={'en_US':'English','pt_BR':'Português (Brasil)'} %}
+                    <select id="lang_select" name="lang">
+                        {% for lang in available_langs %}
+                            <option value="{{ lang }}" {{ 'selected="selected"' if lang==CURRENT_LANGUAGE }}>{{ available_langs[lang] }}</option>
+                        {% endfor %}
+                    </select>
+
+                </form>
+
+
             </div>
         </div>
     </div>

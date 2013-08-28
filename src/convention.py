@@ -3,11 +3,11 @@ from __future__ import absolute_import, unicode_literals
 import sys
 import os
 #Put lib on path, once Google App Engine does not allow doing it directly
-import settings
-
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 
 from webapp2_extras import i18n
+import middlewares
+import settings
 import tmpl
 import logging
 import traceback
@@ -26,6 +26,20 @@ def _extract_values(handler, param, default_value=""):
         return param, values
 
 
+def execute_middlewares(midlewares, req, resp, handler_fcn):
+    if midlewares:
+        current_middleware=midlewares[0]
+
+        def next_process():
+            next_middlewares=midlewares[1:]
+            execute_middlewares(next_middlewares,req,resp,handler_fcn)
+
+        current_middleware(req,resp,next_process)
+    else:
+        handler_fcn()
+
+
+
 class BaseHandler(webapp2.RequestHandler):
     def get(self):
         self.make_convetion()
@@ -35,13 +49,13 @@ class BaseHandler(webapp2.RequestHandler):
 
     def make_convetion(self):
         kwargs = dict(_extract_values(self, a) for a in self.request.arguments())
-        locale = self.request.headers.get("Accept-Language", "en_US").split(",")[0]
-        locale = locale.replace("-", "_")
-        i18n.get_i18n().set_locale(locale)
+
 
         def write_tmpl(template_name, values={}):
-            values['APP_NAME']=settings.APP_NAME
-            values['APP_HOST']=settings.APP_HOST
+            values['APP_NAME'] = settings.APP_NAME
+            values['APP_HOST'] = settings.APP_HOST
+            i18n_obj=i18n.get_i18n()
+            values['CURRENT_LANGUAGE']=i18n_obj.locale
             return self.response.write(tmpl.render(template_name, values))
 
         convention_params = {"_req": self.request,
@@ -52,7 +66,11 @@ class BaseHandler(webapp2.RequestHandler):
         convention_params["_dependencies"] = convention_params
         try:
             fcn, params = router.to_handler(self.request.path, convention_params, **kwargs)
-            fcn(*params, **kwargs)
+
+            def handler_fcn():
+                fcn(*params, **kwargs)
+
+            execute_middlewares(middlewares.MIDLEWARE_LIST, self.request, self.response, handler_fcn)
         except PathNotFound:
             logging.error("Path not Found: " + self.request.path)
         except:

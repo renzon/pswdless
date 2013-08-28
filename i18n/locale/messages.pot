@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-08-27 17:47-0300\n"
+"POT-Creation-Date: 2013-08-28 01:52-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
-
-#: ../src/web/home.py:7
-msgid "Hello"
-msgstr ""
 
 #: ../src/web/templates/api_home.html:17
 msgid "API Documentation"
@@ -39,98 +35,104 @@ msgstr ""
 msgid "Table of Contents"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:27 ../src/web/templates/api_home.html:35
+#: ../src/web/templates/api_home.html:27 ../src/web/templates/api_home.html:36
 msgid "Overview"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:28 ../src/web/templates/api_home.html:153
+#: ../src/web/templates/api_home.html:28
+msgid "Summary"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:29 ../src/web/templates/api_home.html:156
 msgid "Registering Sites"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:39
+#: ../src/web/templates/api_home.html:40
 msgid ""
 " The sequence diagram on right shows the overview schema of\n"
 "                        authentication. It contains the following steps:"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:43
+#: ../src/web/templates/api_home.html:44
 #, python-format
 msgid ""
 " After registering your site, you can make a HTTP Post call\n"
 "                                to %(APP_NAME)s with user email or id;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:47
+#: ../src/web/templates/api_home.html:48
 #, python-format
 msgid ""
 " %(APP_NAME)s send an email to user containing a secure login\n"
 "                                link;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:51
+#: ../src/web/templates/api_home.html:52
 msgid " User clicks on login link;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:54
+#: ../src/web/templates/api_home.html:55
 #, python-format
 msgid ""
 " %(APP_NAME)s send a HTTP Get call to your site so you know she logged\n"
 "                                in;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:58
+#: ../src/web/templates/api_home.html:59
 #, python-format
 msgid ""
 " Your site send a HTTP Get call to %(APP_NAME)s asking for user id and\n"
 "                                email;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:62
+#: ../src/web/templates/api_home.html:63
 msgid ""
 " After receiving user data, you log the user in and show your welcome\n"
 "                                page;"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:67
+#: ../src/web/templates/api_home.html:68
 msgid ""
 "Each step, including parameters and response formats, will be explained "
 "in detail on\n"
 "                        following sections."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:70
+#: ../src/web/templates/api_home.html:71
 msgid ""
-"<a href=\"#table_summary\">Table 1</a> shows all the available REST api. "
+"<a href=\"#table_summary\">Summary</a> shows all the available REST api. "
 "The return\n"
 "                        format is JSON."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:84
+#: ../src/web/templates/api_home.html:85
 msgid ""
-"Table 1 - Summary\n"
-"                        Calls"
-msgstr ""
-
-#: ../src/web/templates/api_home.html:90
-msgid "Call"
+"Table 1 -\n"
+"                        Summary"
 msgstr ""
 
 #: ../src/web/templates/api_home.html:91
-msgid "Parameters"
+msgid "Call"
 msgstr ""
 
 #: ../src/web/templates/api_home.html:92
-msgid "Return"
+msgid "Parameters"
 msgstr ""
 
 #: ../src/web/templates/api_home.html:93
+msgid "Return"
+msgstr ""
+
+#: ../src/web/templates/api_home.html:94
 msgid "Description"
 msgstr ""
 
-#: ../src/web/templates/api_home.html:99
+#: ../src/web/templates/api_home.html:100
 #, python-format
 msgid ""
 "<h4>Required</h4>\n"
+"                                    <b>app_id (String)</b> - the "
+"registered domain id;<br/>\n"
 "                                    <b>token (String)</b> - the "
 "registered domain token;<br/>\n"
 "                                    <b>hook (String)</b> - the address on"
@@ -140,8 +142,8 @@ msgid ""
 "                                    <h4>Optional</h4>\n"
 "                                    <b>email (String)</b> - user's email."
 " Ignored if id is present;<br/>\n"
-"                                    <b>id (String)</b> - user's id on "
-"%(APP_NAME)s;<br/>\n"
+"                                    <b>user_id (String)</b> - user's id "
+"on %(APP_NAME)s;<br/>\n"
 "                                    <b>lang (String)</b> - The language "
 "%(APP_NAME)s must use on email. Available\n"
 "                                    values: en_US (English) and pt_BR "
@@ -149,13 +151,13 @@ msgid ""
 "                                    en_US."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:110
+#: ../src/web/templates/api_home.html:112
 msgid ""
 "JSON containing the ticket of the login call. Ex:\n"
 "                                    {ticket:\"123456\"}."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:112
+#: ../src/web/templates/api_home.html:114
 msgid ""
 "This call will send user an email containing the login link. One of id or"
 "\n"
@@ -167,7 +169,7 @@ msgid ""
 "                                    call."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:120
+#: ../src/web/templates/api_home.html:122
 msgid ""
 "<h4>Required</h4>\n"
 "                                    <b>ticket (String)</b> - the ticket "
@@ -175,13 +177,13 @@ msgid ""
 "                                "
 msgstr ""
 
-#: ../src/web/templates/api_home.html:124
+#: ../src/web/templates/api_home.html:126
 msgid ""
 " Your site need to sent a 200 HTTP status code. Any message sent is\n"
 "                                    ignored "
 msgstr ""
 
-#: ../src/web/templates/api_home.html:126
+#: ../src/web/templates/api_home.html:128
 #, python-format
 msgid ""
 "After user click on link sent by email, %(APP_NAME)s will make a Post\n"
@@ -191,7 +193,7 @@ msgid ""
 " from %(APP_NAME)s."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:132
+#: ../src/web/templates/api_home.html:134
 msgid ""
 "<h4>Required</h4>\n"
 "                                    <b>token (String)</b> - the "
@@ -201,49 +203,46 @@ msgid ""
 "                                "
 msgstr ""
 
-#: ../src/web/templates/api_home.html:137
+#: ../src/web/templates/api_home.html:139
 msgid ""
 "JSON containing user's details. Ex:\n"
 "                                    {id:\"654321\",email:\"foo@bar.com\"}."
 msgstr ""
 
-#: ../src/web/templates/api_home.html:139
+#: ../src/web/templates/api_home.html:141
 msgid ""
 "This call returns the user's details that can save in your site. The id\n"
 "                                    of a user will never change, so you "
 "can use it as a strong\n"
 "                                    reference. After this call, you can "
-"save cookies on user's browser to keep she logged."
+"save cookies on user's browser to keep she\n"
+"                                    logged."
 msgstr ""
 
-#: ../src/web/templates/base.html:60
+#: ../src/web/templates/base.html:71
 msgid "Home"
 msgstr ""
 
-#: ../src/web/templates/base.html:63 ../src/web/templates/sites.html:7
+#: ../src/web/templates/base.html:74 ../src/web/templates/sites.html:7
 msgid "My Sites"
 msgstr ""
 
-#: ../src/web/templates/base.html:66
+#: ../src/web/templates/base.html:77
 msgid "API"
 msgstr ""
 
-#: ../src/web/templates/base.html:69 ../src/web/templates/languages.html:6
+#: ../src/web/templates/base.html:80 ../src/web/templates/languages.html:6
 msgid "Languages"
 msgstr ""
 
-#: ../src/web/templates/base.html:77
+#: ../src/web/templates/base.html:88
 msgid "Type your email"
 msgstr ""
 
-#: ../src/web/templates/base.html:78
+#: ../src/web/templates/base.html:89
 msgid ""
 "\n"
 "                                Login "
-msgstr ""
-
-#: ../src/web/templates/base.html:100
-msgid "Change Language"
 msgstr ""
 
 #: ../src/web/templates/home.html:5
@@ -271,7 +270,7 @@ msgid "Register Your Site Now "
 msgstr ""
 
 #: ../src/web/templates/home.html:25
-msgid "Free Service "
+msgid "Free and Open Source "
 msgstr ""
 
 #: ../src/web/templates/home.html:29
@@ -308,9 +307,43 @@ msgstr ""
 msgid " API Documentantion"
 msgstr ""
 
-#: ../src/web/templates/languages.html:7
+#: ../src/web/templates/languages.html:8
 #, python-format
-msgid "For now %(APP_NAME)s has only to available languages: en_US and pt_BR"
+msgid ""
+"<p>\n"
+"                For now %(APP_NAME)s has only to available languages: "
+"en_US and pt_BR. But you can contribute\n"
+"                translating it for your language</p>\n"
+"                <p> The internationalization is made using\n"
+"                    <a target=\"_blank\" "
+"href=\"http://babel.edgewall.org\">Babel</a>. To include a new language, "
+"add it on\n"
+"                    <a target=\"_blank\"\n"
+"                       "
+"href=\"https://github.com/renzon/pswdless/blob/master/src/settings.py\">settings.py</a>"
+"\n"
+"                    and run<a target=\"_blank\" "
+"href=\"https://github.com/renzon/pswdless/blob/master/i18n/make_files.py\">make_files.py</a>"
+"\n"
+"                    script. It will create a folder with the language "
+"name on\n"
+"                    <a target=\"_blank\" "
+"href=\"https://github.com/renzon/pswdless/tree/master/i18n/locale\">locale</a>"
+" the\n"
+"                    messages.po file. You use this file to make the "
+"translation. See\n"
+"                    <a target=\"_blank\"\n"
+"                       "
+"href=\"https://github.com/renzon/pswdless/blob/master/i18n/locale/pt_BR/LC_MESSAGES/messages.po\">pt_BR</a>"
+"\n"
+"                    file as example.\n"
+"                </p>\n"
+"                <p>After finishing the translation, run make_file.py "
+"again to compile the new information.</p>\n"
+"                <p>If you become a translator and the %(APP_NAME)s begin "
+"to charge for the service in the future, you will be on the VIP list so "
+"you will be able to use the service for free!</p>\n"
+"            "
 msgstr ""
 
 #: ../src/web/templates/login.html:7
@@ -323,11 +356,11 @@ msgid " Check your email. %(APP_NAME)s will send you a link so you can login."
 msgstr ""
 
 #: ../src/web/templates/sites.html:13
-msgid "Domain"
+msgid "Id"
 msgstr ""
 
 #: ../src/web/templates/sites.html:14
-msgid "Login Redirect URL"
+msgid "Domain"
 msgstr ""
 
 #: ../src/web/templates/sites.html:15

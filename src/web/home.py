@@ -4,5 +4,4 @@ from webapp2_extras.i18n import gettext as _
 
 
 def index(_write_tmpl):
-    values = {"hello": _("Hello")}
-    _write_tmpl("templates/home.html", values)
+    _write_tmpl("templates/home.html")
