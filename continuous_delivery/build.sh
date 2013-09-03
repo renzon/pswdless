@@ -28,7 +28,7 @@ virtualenv $APP_NAME
 cd $APP_NAME
 source bin/activate
 
-pip install -r requirements.txt
+pip install -r requirements.txt --upgrade --use-mirrors
 
 to_console "Running tests"
 test/testloader.py
