@@ -22,5 +22,13 @@ git pull origin master
 to_console "Removing .pyc files"
 find . -name "*.pyc" -delete
 
+cd ..
+virtualenv $APP_NAME
+
+cd $APP_NAME
+source bin/activate
+
+pip install -r requirements.txt
+
 to_console "Running tests"
 test/testloader.py
