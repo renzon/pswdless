@@ -23,13 +23,15 @@
             max-width: 1172px;
             margin: auto;
         }
+
+        #login_div{ padding-top: 5px;}
     </style>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            var $form=$('#lang_form')
-            $('#lang_select').change(function(){
+        $(document).ready(function () {
+            var $form = $('#lang_form')
+            $('#lang_select').change(function () {
                 $form.submit();
             });
         });
@@ -83,11 +85,10 @@
                     </ul>
                     <div class="pull-right">
                         <form class="form-inline" action="/login" method="post">
-                            <input type="text" class="input-medium"
-                                   name="email"
-                                   placeholder="{% trans %}Type your email{% endtrans %}">
-                            <button type="submit" class="btn btn-success">{% trans %}
-                                Login {% endtrans %}</button>
+                            <div class="input-append" id="login_div">
+                                <input class="span2"  type="text">
+                                <button class="btn btn-success" type="submit">{% trans %}Login{% endtrans %}</button>
+                            </div>
                         </form>
                     </div>
                 </div>
