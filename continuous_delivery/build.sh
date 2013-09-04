@@ -36,7 +36,7 @@ to_console "Generating i18n po files on src/locale"
 
 cd i18n
 chmod 700 make_files.py
-make_files.py compile_po
+python make_files.py compile_po
 cd ..
 
 
