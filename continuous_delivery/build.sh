@@ -9,9 +9,11 @@ function to_console {
 
 to_console "Checkouting to branch"
 git checkout -b "$BRANCH" || git checkout "$BRANCH"
+git reset # reverting all possible local changes
+
 
 to_console "Updating repo"
-git pull origin "$BRANCH" -f
+git pull origin "$BRANCH"
 
 to_console "Last commit"
 git log -1
