@@ -33,7 +33,7 @@ source bin/activate
 pip install -r requirements.txt --upgrade --use-mirrors
 
 to_console "Generating i18n po files on src/locale"
-i18n/makefile.py compile_po
+i18n/make_files.py compile_po
 
 
 to_console "Running tests"
