@@ -20,10 +20,10 @@ def handle_yaml(src, build, file_name, extension):
         for line in app_src:
             if line.startswith("application"):
                 #alterar para variavel depois
-                line = "application: %s\n" % sys.argv[2]
+                line = "application: %s\n" % sys.argv[1]
             if line.startswith("version"):
                 #alterar para variavel depois
-                line = "version: %s\n" % sys.argv[1]
+                line = "version: %s\n" % sys.argv[2]
             app_build.write(line)
         app_src.close()
         app_build.close()
