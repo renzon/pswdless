@@ -29,10 +29,19 @@ def compile_po_files(compile_target, locale_target):
 
 
 if __name__ == "__main__":
+    if 'GAE_SDK' in os.environ:
+
+        SDK_PATH = os.environ['GAE_SDK']
+
+        sys.path.insert(0, SDK_PATH)
+
+        import dev_appserver
+        dev_appserver.fix_sys_path()
     i18n_dir = os.path.dirname(__file__)
     logging.info("i18n dir: %s" % i18n_dir)
     proj_dir = os.path.join(i18n_dir, "..")
-    logging.info("project dir: %s" % i18n_dir)
+    logging.info("project dir: %s" % proj_dir)
+    sys.path.append(os.path.join(proj_dir, 'src'))
 
     compile_target = os.path.join(".", "locale")
     target = os.path.join(proj_dir, "src")
