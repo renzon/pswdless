@@ -11,7 +11,7 @@ to_console "Checkouting to branch"
 git checkout -b "$BRANCH" || git checkout "$BRANCH"
 
 to_console "Updating repo"
-git pull origin "$BRANCH"
+git pull origin "$BRANCH" -f
 
 to_console "Last commit"
 git log -1
