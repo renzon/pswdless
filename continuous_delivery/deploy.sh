@@ -1,5 +1,4 @@
 #!/bin/bash
-
 continuous_delivery/build.sh
 
 $GAE_SDK/appcfg.py update build --email=$BOT_EMAIL --passin <<<"$BOT_PASSWORD"
