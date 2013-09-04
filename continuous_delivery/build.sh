@@ -42,3 +42,6 @@ cd ..
 
 to_console "Running tests"
 test/testloader.py
+
+chmod 700 continuous_delivery/build_files.py
+continuous_delivery/build_files.py $APP_NAME $BRANCH
