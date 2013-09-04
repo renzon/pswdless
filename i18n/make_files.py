@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import logging
 import sys
 import os
 import settings
@@ -29,12 +30,16 @@ def compile_po_files(compile_target, locale_target):
 
 if __name__ == "__main__":
     i18n_dir = os.path.dirname(__file__)
+    logging.info("i18n dir: %s" % i18n_dir)
     proj_dir = os.path.join(i18n_dir, "..")
-    babel_cfg = os.path.join(i18n_dir, "babel.cfg")
+    logging.info("project dir: %s" % i18n_dir)
+
     compile_target = os.path.join(".", "locale")
     target = os.path.join(proj_dir, "src")
-    msgs_pot = os.path.join(compile_target, "messages.pot")
-    if len(sys.argv)==1:
+
+    if len(sys.argv) == 1:
+        babel_cfg = os.path.join(i18n_dir, "babel.cfg")
+        msgs_pot = os.path.join(compile_target, "messages.pot")
         os.system("pybabel extract -F %s -o %s %s" % (babel_cfg, msgs_pot, target))
         locales = settings.LOCALES
         for loc in locales:
