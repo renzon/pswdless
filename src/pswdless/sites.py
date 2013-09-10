@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import urlparse
+from urlparse import urlparse
 
 from google.appengine.api import users
 from webapp2_extras.i18n import gettext as _
@@ -22,8 +22,8 @@ class SaveSite(Command):
 
 
     def set_up(self):
-        parse_result=urlparse.urlparse(self._url)
-        domain = parse_result.netloc.split(':')[0]
+        parse_result=urlparse(self._url)
+        domain = parse_result.netloc.split(':')[0] or self._url
         token = urandom(16).encode('hex')
         self.result = Site(domain=domain, token=token)
         self._future = self.result._put_async()

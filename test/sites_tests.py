@@ -6,7 +6,7 @@ from gaegraph.model import to_node_key
 from mock import Mock
 from pswdless import sites, users, facade
 from pswdless.model import SiteOwner
-from pswdless.sites import SaveSite, InitialSetup
+from pswdless.sites import SaveSite
 from pswdless.users import FindOrCreateUser
 
 # mocking i18n
@@ -17,19 +17,21 @@ sites._ = lambda s: s
 
 
 class SaveSiteTests(GAETestCase):
-    def test_success(self):
+    def test_success(self, url='http://www.mydomain.com', domain='www.mydomain.com'):
         find_user = FindOrCreateUser('foo@bar.com')
         find_user.execute()
         user = find_user.result
-        url = 'http://www.mydomain.com'
         save_site = SaveSite(user, url)
         save_site.execute()
         site = save_site.result
-        self.assertEqual('www.mydomain.com', site.domain)
+        self.assertEqual(domain, site.domain)
         self.assertIsNotNone(site.token)
         search = NeighborsSearch(SiteOwner, user)
         search.execute()
         self.assertListEqual([site.key], [s.key for s in search.result])
+
+    def test_success_with_naked_domain(self):
+        self.test_success('pswd.appspot.com', 'pswd.appspot.com')
 
 
 class InitialSetupTests(GAETestCase):
@@ -44,14 +46,14 @@ class InitialSetupTests(GAETestCase):
         setup = facade.initial_setup()
         setup.execute()
         site = setup.result
-        self.assertEqual('localhost', site.domain)
+        self.assertEqual(settings.APP_HOST, site.domain)
         find_user = FindOrCreateUser(user_email)
         find_user.execute()
-        user=find_user.result
-        search=NeighborsSearch(SiteOwner,to_node_key(user))
+        user = find_user.result
+        search = NeighborsSearch(SiteOwner, to_node_key(user))
         search.execute()
-        user_sites=search.result
-        self.assertListEqual([site.key],[s.key for s in user_sites])
+        user_sites = search.result
+        self.assertListEqual([site.key], [s.key for s in user_sites])
 
 
 def test_google_user_not_logged(self):
