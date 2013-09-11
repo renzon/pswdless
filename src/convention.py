@@ -52,7 +52,10 @@ class BaseHandler(webapp2.RequestHandler):
         def write_tmpl(template_name, values={}):
             values['APP_NAME'] = settings.APP_NAME
             values['APP_HOST'] = settings.APP_HOST
-            values['XSRF_TOKEN'] = extract_xsrf_token(self.request)
+            xsrf_token = extract_xsrf_token(self.request)
+            if xsrf_token is None:
+                xsrf_token = middlewares.xsrf_cookie(self.request, self.response, lambda: None)
+            values['XSRF_TOKEN'] = xsrf_token
             i18n_obj = i18n.get_i18n()
             values['CURRENT_LANGUAGE'] = i18n_obj.locale
             return self.response.write(tmpl.render(template_name, values))
