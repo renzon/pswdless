@@ -4,7 +4,7 @@ import sys
 import os
 #Put lib on path, once Google App Engine does not allow doing it directly
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
-
+from pswdless.security import extract_xsrf_token
 from webapp2_extras import i18n
 import middlewares
 import settings
@@ -28,16 +28,15 @@ def _extract_values(handler, param, default_value=""):
 
 def execute_middlewares(midlewares, req, resp, handler_fcn):
     if midlewares:
-        current_middleware=midlewares[0]
+        current_middleware = midlewares[0]
 
         def next_process():
-            next_middlewares=midlewares[1:]
-            execute_middlewares(next_middlewares,req,resp,handler_fcn)
+            next_middlewares = midlewares[1:]
+            execute_middlewares(next_middlewares, req, resp, handler_fcn)
 
-        current_middleware(req,resp,next_process)
+        current_middleware(req, resp, next_process)
     else:
         handler_fcn()
-
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -50,12 +49,12 @@ class BaseHandler(webapp2.RequestHandler):
     def make_convetion(self):
         kwargs = dict(_extract_values(self, a) for a in self.request.arguments())
 
-
         def write_tmpl(template_name, values={}):
             values['APP_NAME'] = settings.APP_NAME
             values['APP_HOST'] = settings.APP_HOST
-            i18n_obj=i18n.get_i18n()
-            values['CURRENT_LANGUAGE']=i18n_obj.locale
+            values['XSRF_TOKEN'] = extract_xsrf_token(self.request)
+            i18n_obj = i18n.get_i18n()
+            values['CURRENT_LANGUAGE'] = i18n_obj.locale
             return self.response.write(tmpl.render(template_name, values))
 
         convention_params = {"_req": self.request,
