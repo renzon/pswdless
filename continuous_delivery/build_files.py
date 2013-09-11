@@ -27,7 +27,7 @@ def handle_yaml(src, build, file_name, extension):
             app_build.write(line)
         app_src.close()
         app_build.close()
-    elif file_name != "index":
+    else:
         shutil.copyfile(src, build)
 
 

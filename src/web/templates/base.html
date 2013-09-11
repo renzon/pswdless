@@ -24,7 +24,9 @@
             margin: auto;
         }
 
-        #login_div{ padding-top: 5px;}
+        #login_div {
+            padding-top: 5px;
+        }
     </style>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -37,6 +39,10 @@
         });
 
     </script>
+
+    {% macro xsrf_input() %}
+        <input type="hidden" name="xsrf_token" value="{{ XSRF_TOKEN }}"/>
+    {% endmacro %}
 
     {% block head %}
 
@@ -86,7 +92,7 @@
                     <div class="pull-right">
                         <form class="form-inline" action="/login" method="post">
                             <div class="input-append" id="login_div">
-                                <input class="span2"  type="text">
+                                <input class="span2" type="text">
                                 <button class="btn btn-success" type="submit">{% trans %}Login{% endtrans %}</button>
                             </div>
                         </form>
@@ -111,6 +117,7 @@
             <div class="span4">
 
                 <form id="lang_form" action="/languages/change" method="post">
+                    {{ xsrf_input() }}
                     {% set available_langs={'en_US':'English','pt_BR':'Português (Brasil)'} %}
                     <select id="lang_select" name="lang">
                         {% for lang in available_langs %}
