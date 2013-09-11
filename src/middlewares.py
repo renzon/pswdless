@@ -24,8 +24,8 @@ def xsrf_cookie(req, resp, next_process):
     random_number = extract_xsrf_token(req)
     if random_number is None:
         token,random_number=generate_xsrf_token()
-    resp.set_cookie(settings.XSRF_TOKEN, token, httponly=True)
-    resp.set_cookie(settings.XSRF_ANGULAR_COOKIE, random_number, httponly=True)
+    resp.set_cookie(settings.XSRF_TOKEN, token, httponly=True, overwrite=True)
+    resp.set_cookie(settings.XSRF_ANGULAR_COOKIE, random_number, httponly=True,overwrite=True)
     next_process()
     return token
 
