@@ -9,3 +9,7 @@ def initial_setup():
     It is restricted to Google App Engine admins and works only the first time it is executed
     '''
     return InitialSetup()
+
+
+def send_login_email():
+    pass

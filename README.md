@@ -1,4 +1,4 @@
 Password-less
 ========
 
-Simple Login through email with no password need
+Passwor-less login service

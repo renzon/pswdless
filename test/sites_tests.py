@@ -9,9 +9,9 @@ from pswdless.model import SiteOwner
 from pswdless.sites import SaveSite
 from pswdless.users import FindOrCreateUser
 
-# mocking i18n
-import settings
 
+import settings
+# mocking i18n
 users._ = lambda s: s
 sites._ = lambda s: s
 

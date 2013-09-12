@@ -2,8 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 from base import GAETestCase
 from gaegraph.business_base import NeighborsSearch
-from pswdless.model import PswdUserEmail, EmailUser
-from pswdless.users import FindOrCreateUser
+from mommygae import mommy
+from pswdless.model import PswdUserEmail, EmailUser, PswdUser
+from pswdless.users import FindOrCreateUser, FindUserById
 from pswdless import users
 
 # mocking i18n
@@ -42,7 +43,6 @@ class FindOrCreateUserTests(GAETestCase):
         self.assertEqual(user.key, user2.key)
 
     def test_invalid_email(self):
-
         def assertErrorMessage(email, error_msg):
             find_user = FindOrCreateUser(email)
             find_user.execute()
@@ -53,5 +53,20 @@ class FindOrCreateUserTests(GAETestCase):
         assertErrorMessage('a', 'Email is invalid')
         assertErrorMessage('a@', 'Email is invalid')
         assertErrorMessage('a@foo', 'Email is invalid')
+
+
+class FindUserByIdTests(GAETestCase):
+    def test_user_not_found(self):
+        cmd = FindUserById('1')
+        cmd.execute()
+        self.assertDictEqual({'user': 'User not found'},cmd.errors)
+
+    def test_user_found(self):
+        user=mommy.make_one(PswdUser)
+        user.put()
+        cmd = FindUserById(user.key.id())
+        cmd.execute()
+        self.assertDictEqual({},cmd.errors)
+        self.assertEqual(user.key,cmd.result.key)
 
 

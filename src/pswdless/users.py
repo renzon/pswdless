@@ -6,7 +6,7 @@ from google.appengine.ext import ndb
 from webapp2_extras.i18n import gettext as _
 
 from gaebusiness.business import Command
-from gaegraph.business_base import NeighborsSearch
+from gaegraph.business_base import NeighborsSearch, NodeSearch
 from pswdless.model import PswdUserEmail, EmailUser, PswdUser
 import re
 
@@ -47,9 +47,15 @@ class FindOrCreateUser(Command):
                 pswd_email = PswdUserEmail(email=self.email)
                 self.result = PswdUser()
                 ndb.put_multi([pswd_email, self.result])
-                memcache.add(self._cache_key(),self.result)
+                memcache.add(self._cache_key(), self.result)
                 self._to_commit = EmailUser(origin=pswd_email.key, destination=self.result.key)
 
     def commit(self):
         return self._to_commit
 
+
+class FindUserById(NodeSearch):
+    def do_business(self, stop_on_error=False):
+        super(FindUserById, self).do_business()
+        if self.result is None:
+            self.add_error('user', _('User not found'))

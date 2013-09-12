@@ -14,3 +14,6 @@ XSRF_TOKEN_EXPIRATION = 21600
 #  So if you are using it, don't change this name
 XSRF_ANGULAR_COOKIE='XSRF-TOKEN'
 XSRF_ANGULAR_AJAX_COOKIE='X-XSRF-TOKEN'
+
+# See queue.yaml for configuration
+TASK_HERO='hero'
