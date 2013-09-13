@@ -46,7 +46,7 @@ msgid ""
 "supposed that people reading these docs\n"
 "                    has basic knowledge about HTTP GET and POST calls and"
 " JSON."
-msgstr "A documentação"
+msgstr "Esse documento fornece a informação necessaria"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/api_home.html:25
 msgid "Table of Contents"
