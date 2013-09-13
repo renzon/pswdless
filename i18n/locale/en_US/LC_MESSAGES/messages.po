@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  Beta\n"
 "Report-Msgid-Bugs-To: renzo.n@gmail.com\n"
-"POT-Creation-Date: 2013-09-04 00:08-0300\n"
+"POT-Creation-Date: 2013-09-13 00:50-0300\n"
 "PO-Revision-Date: 2013-08-28 01:34-0300\n"
 "Last-Translator: Renzo nuccitelli <renzo.n@gmail.com>\n"
 "Language-Team: en_US <LL@li.org>\n"
@@ -17,6 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:49
+msgid "You have no admin permission"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:51
+msgid "Login with your Google account"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:22
+msgid "Email is required"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:26
+msgid "Email is invalid"
+msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/api_home.html:17
 msgid "API Documentation"
@@ -222,25 +238,25 @@ msgid ""
 "                                    logged."
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:73
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:79
 msgid "Home"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:76
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:82
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites.html:7
 msgid "My Sites"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:79
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:85
 msgid "API"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:82
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:88
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/languages.html:6
 msgid "Languages"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:90
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:96
 msgid "Login"
 msgstr ""
 
