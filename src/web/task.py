@@ -5,7 +5,7 @@ from pswdless import facade
 from zen import router
 
 
-def index(_resp,_handler):
+def setup(_resp,_handler):
     _resp.write('Setup disabled. You can enable by removing the coments on web.setup.py')
     # setup_cmd=facade.initial_setup()
     # setup_cmd.execute()
@@ -19,3 +19,6 @@ def index(_resp,_handler):
     #         return_url=router.to_path(index)
     #         login_url=users.create_login_url(return_url)
     #         _handler.redirect(login_url)
+
+def send_login_email():
+    pass
