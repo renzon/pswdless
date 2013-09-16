@@ -14,6 +14,10 @@ class Site(Searchable):
     domain = ndb.StringProperty(required=True)
     token = ndb.StringProperty(required=True)
 
+    @classmethod
+    def find_by_domain(cls, domain):
+        return cls.query(cls.domain==domain).order(cls.creation)
+
 # User data
 class PswdUser(Searchable):
     pass

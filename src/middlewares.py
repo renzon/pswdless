@@ -26,7 +26,7 @@ def xsrf_cookie(req, resp, next_process):
     resp.set_cookie(settings.XSRF_TOKEN, token, httponly=True, overwrite=True)
     resp.set_cookie(settings.XSRF_ANGULAR_COOKIE, random_number, httponly=True, overwrite=True)
     next_process()
-    return token
+    return random_number
 
 
 MIDLEWARE_LIST = [setup_language, xsrf_cookie]

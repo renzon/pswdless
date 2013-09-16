@@ -16,9 +16,9 @@ def setup(_resp,_handler):
     #     if google_user:
     #         _resp.write(setup_cmd.errors)
     #     else:
-    #         return_url=router.to_path(index)
+    #         return_url=router.to_path(setup)
     #         login_url=users.create_login_url(return_url)
     #         _handler.redirect(login_url)
 
-def send_login_email():
+def send_login_email(**kwargs):
     pass

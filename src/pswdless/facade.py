@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from mock import Mock
+from pswdless import languages
 from pswdless.login import SetupLoginTask
-from pswdless.sites import InitialSetup
+from pswdless.sites import InitialSetup, FindCurrentSite
+
+languages.i18n = Mock()
 
 
 def initial_setup():
@@ -12,5 +16,9 @@ def initial_setup():
     return InitialSetup()
 
 
-def setup_login_task(site_id, site_token, hook, user_id=None, user_email=None, lang='en_US'):
-    return SetupLoginTask(site_id, site_token, hook, user_id, user_email, lang)
+def setup_login_task(app_id, token, hook, user_id=None, email=None, lang='en_US'):
+    return SetupLoginTask(app_id, token, hook, user_id, email, lang)
+
+def find_current_site():
+    return FindCurrentSite()
+

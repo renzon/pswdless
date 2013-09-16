@@ -4,6 +4,7 @@ from google.appengine.api import app_identity
 
 APP_NAME = 'Password-less'
 APP_HOST = app_identity.get_default_version_hostname() or r'pswdless.appspot.com'
+APP_HOME= 'http://'+APP_HOST if APP_HOST.startswith('localhost') else 'https://'+APP_HOST
 LOCALES = ['en_US', 'pt_BR']
 DEFAULT_LOCALE = 'en_US'
 LANG_COOKIE = 'pswdlang'

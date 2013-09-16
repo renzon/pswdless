@@ -45,6 +45,7 @@ class CertifySiteHook(Command):
 
     def _validate_domain(self, domain, netloc):
         hook_domain = netloc.split(':')[0] # eliminating the port from de netloc
+        domain = domain.split(':')[0] # eliminating the port from de netloc
         if not hook_domain.endswith(domain) and not self.errors:
             self.add_error('domain', _('Invalid domain: %(domain)s') % {'domain': hook_domain})
 
