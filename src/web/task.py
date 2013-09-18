@@ -39,7 +39,7 @@ def send_login_email(_render, login_id, lang):
         values = {'APP_NAME': settings.APP_NAME, 'site': site, 'login_link': link}
         body = _render('templates/login_email.txt', values)
         mail.send_mail(settings.EMAIL_SENDER, email.email,
-                       _('(app_name)s Login Link') % {'app_name': settings.APP_NAME},
+                       _('%(site)s Login Link') % {'site': site.domain},
                        body)
 
     facade.send_login_email(login_id, send).execute(True)
