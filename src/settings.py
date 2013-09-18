@@ -16,7 +16,7 @@ XSRF_TOKEN_EXPIRATION = 21600
 XSRF_ANGULAR_COOKIE = 'XSRF-TOKEN'
 XSRF_ANGULAR_AJAX_COOKIE = 'X-XSRF-TOKEN'
 
-EMAIL_SENDER = 'Passwordless<login@appid.appspotmail.com>'
+EMAIL_SENDER = 'Passwordless<login@pswdless.appspotmail.com>'
 
 # See queue.yaml for configuration
 TASK_HERO = 'hero'
