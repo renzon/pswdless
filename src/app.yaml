@@ -42,4 +42,9 @@ handlers:
   secure: always
   script: convention.app
 
+- url: /task.*
+  login: admin
+  secure: always
+  script: convention.app
+
 

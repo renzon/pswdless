@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 from urlparse import urlparse
 
-from google.appengine.api import users
+from google.appengine.api import users, memcache
 from webapp2_extras.i18n import gettext as _
 
 from gaegraph.model import to_node_key
@@ -22,7 +22,7 @@ class SaveSite(Command):
 
 
     def set_up(self):
-        parse_result=urlparse(self._url)
+        parse_result = urlparse(self._url)
         domain = parse_result.netloc.split(':')[0] or self._url
         token = urandom(16).encode('hex')
         self.result = Site(domain=domain, token=token)
@@ -41,9 +41,9 @@ class InitialSetup(Command):
         google_user = users.get_current_user()
         if google_user:
             if users.is_current_user_admin():
-                find_user=FindOrCreateUser(google_user.email())
+                find_user = FindOrCreateUser(google_user.email())
                 find_user.execute()
-                self._save_site=SaveSite(find_user.result,settings.APP_HOST)
+                self._save_site = SaveSite(find_user.result, settings.APP_HOST)
                 self._save_site.set_up()
             else:
                 self.add_error('user', _('You have no admin permission'))
@@ -53,10 +53,23 @@ class InitialSetup(Command):
     def do_business(self, stop_on_error=False):
         if not self.errors:
             self._save_site.do_business()
-            self.result=self._save_site.result
+            self.result = self._save_site.result
 
     def commit(self):
         if not self.errors:
             return self._save_site.commit()
 
 
+class FindCurrentSite(Command):
+    def set_up(self):
+        try:
+            self.result = memcache(settings.APP_HOST)
+        except:
+            pass
+        if not self.result:
+            self._future = Site.find_by_domain(settings.APP_HOST).get_async()
+
+    def do_business(self, stop_on_error=False):
+        if not self.result:
+            self.result = self._future.get_result()
+            memcache.set(settings.APP_HOST, self.result)

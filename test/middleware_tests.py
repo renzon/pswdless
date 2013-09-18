@@ -15,7 +15,7 @@ class SetupLanguageTest(unittest.TestCase):
         request = Mock()
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
-        middlewares.i18n.get_i18n = lambda: i18n_locale
+        middlewares.languages.i18n.get_i18n = lambda: i18n_locale
         request.cookies.get = Mock(return_value="pt_BR")
         # Test
         middlewares.setup_language(request, None, next_process)
@@ -31,7 +31,7 @@ class SetupLanguageTest(unittest.TestCase):
         request = Mock()
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
-        middlewares.i18n.get_i18n = lambda: i18n_locale
+        middlewares.languages.i18n.get_i18n = lambda: i18n_locale
         request.cookies.get = Mock(return_value=None)
         request.headers.get = Mock(return_value="pt-BR, en-US")
         response = Mock()
@@ -43,7 +43,7 @@ class SetupLanguageTest(unittest.TestCase):
         # Assertions
         next_process.assert_called_once_with()
         i18n_locale.set_locale.assert_called_once_with("pt_BR")
-        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, "pt_BR")
+        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, "pt_BR", httponly=True)
 
     def test_language_from_header_not_in_available_languages(self):
         # Mocking
@@ -51,7 +51,7 @@ class SetupLanguageTest(unittest.TestCase):
         request = Mock()
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
-        middlewares.i18n.get_i18n = lambda: i18n_locale
+        middlewares.languages.i18n.get_i18n = lambda: i18n_locale
         request.cookies.get = Mock(return_value=None)
         request.headers.get = Mock(return_value="not available language")
         response = Mock()
@@ -63,7 +63,7 @@ class SetupLanguageTest(unittest.TestCase):
         # Assertions
         next_process.assert_called_once_with()
         i18n_locale.set_locale.assert_called_once_with(settings.DEFAULT_LOCALE)
-        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, settings.DEFAULT_LOCALE)
+        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, settings.DEFAULT_LOCALE, httponly=True)
 
 
 class XSRFCoolieTests(GAETestCase):

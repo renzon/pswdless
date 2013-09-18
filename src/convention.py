@@ -74,8 +74,10 @@ class BaseHandler(webapp2.RequestHandler):
 
             execute_middlewares(middlewares.MIDLEWARE_LIST, self.request, self.response, handler_fcn)
         except PathNotFound:
+            self.response.status_code = 404
             logging.error("Path not Found: " + self.request.path)
         except:
+            self.response.status_code = 400
             logging.error((fcn, params, kwargs))
             logging.error(traceback.format_exc())
 
