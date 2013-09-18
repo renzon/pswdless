@@ -132,7 +132,7 @@ class SetupLoginTask(Command):
             self.create_login.do_business()
             login = self.create_login.result
             self.task = TaskQueueCommand(settings.TASK_HERO, '/task/send_login_email',
-                                         params={'login_id': str(login.key.id()), 'lang': self.lang})
+                                         params={'login_id': str(login.key.id()), 'lang': self.lang}, countdown=4)
             self.task.set_up()
             self.task.do_business()
             self.result = login

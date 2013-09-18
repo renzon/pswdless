@@ -6,7 +6,7 @@ from gaegraph.business_base import DestinationsSearch
 from mock import Mock
 from mommygae import mommy
 from pswdless import login, facade
-from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus, SendLoginEmail
+from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus
 
 # mocking i18n
 from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, LoginStatus, PswdUserEmail, EmailUser, SiteUser
@@ -123,7 +123,7 @@ class SetupLoginTaskTests(GAETestCase):
         login.setup_locale.assert_called_once_with('pt_BR')
         self.assertIsNotNone(lg)
         task_cls.assert_called_once_with(settings.TASK_HERO, router.to_path(task.send_login_email),
-                                         params={'login_id': str(lg.key.id()), 'lang': 'pt_BR'})
+                                         params={'login_id': str(lg.key.id()), 'lang': 'pt_BR'}, countdown=4)
         task_obj.set_up.assert_called_once_with()
         task_obj.do_business.assert_called_once_with()
         task_obj.commit.assert_called_once_with()
