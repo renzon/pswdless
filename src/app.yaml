@@ -22,7 +22,7 @@ libraries:
 
 inbound_services:
 - warmup
-- email
+- mail
 
 builtins:
 - remote_api: on
