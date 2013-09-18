@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from base import GAETestCase
-from gaegraph.business_base import NeighborsSearch
+from gaegraph.business_base import DestinationsSearch
 from mommygae import mommy
 from pswdless.model import PswdUserEmail, EmailUser, PswdUser
 from pswdless.users import FindOrCreateUser, FindUserById, FindUserByIdOrEmail
@@ -19,7 +19,7 @@ class FindOrCreateUserTests(GAETestCase):
         find_user.execute()
         pswd_email = PswdUserEmail.find_by_email(user_email).get()
         self.assertIsNotNone(pswd_email)
-        neighbor_search = NeighborsSearch(EmailUser, pswd_email)
+        neighbor_search = DestinationsSearch(EmailUser, pswd_email)
         neighbor_search.execute()
         self.assertEqual(1, len(neighbor_search.result),
                          'should be created one, and only one arc linking email with user')
@@ -34,7 +34,7 @@ class FindOrCreateUserTests(GAETestCase):
         self.assertEqual(1, len(possible_duplicated))
         pswd_email2 = possible_duplicated[0]
         self.assertEqual(pswd_email.key, pswd_email2.key)
-        neighbor_search = NeighborsSearch(EmailUser, pswd_email)
+        neighbor_search = DestinationsSearch(EmailUser, pswd_email)
         neighbor_search.execute()
         self.assertEqual(1, len(neighbor_search.result),
                          'should be created one, and only one,arc linking email with user')

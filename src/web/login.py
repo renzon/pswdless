@@ -22,5 +22,9 @@ def index(_write_tmpl, _req, email):
         _write_tmpl("templates/login.html")
 
 
+def redirect(signed_ticket_id):
+    pass
+
+
 def check_detail(_resp, **kwargs):
     _resp.write('Sucessful loged in')

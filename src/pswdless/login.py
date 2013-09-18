@@ -7,10 +7,10 @@ from webapp2_extras.i18n import gettext as _
 
 from gaebusiness.business import CommandList, Command, to_model_list
 from gaebusiness.gaeutil import TaskQueueCommand
-from gaegraph.business_base import NodeSearch
-from gaegraph.model import to_node_key
+from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
+from gaegraph.model import to_node_key, Arc
 from pswdless.languages import setup_locale
-from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite
+from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, EmailUser
 from pswdless.users import FindUserByIdOrEmail
 import settings
 
@@ -116,6 +116,7 @@ class CreateLogin(Command):
 class SetupLoginTask(Command):
     def __init__(self, site_id, site_token, hook, user_id=None, user_email=None, lang='en_US'):
         setup_locale(lang)
+        self.lang = lang
         self.validate_login = ValidateLoginCall(site_id, site_token, hook, user_id, user_email)
         self.hook = hook
         super(SetupLoginTask, self).__init__()
@@ -131,7 +132,7 @@ class SetupLoginTask(Command):
             self.create_login.do_business()
             login = self.create_login.result
             self.task = TaskQueueCommand(settings.TASK_HERO, '/task/send_login_email',
-                                         params={'login': str(login.key.id())})
+                                         params={'login_id': str(login.key.id()), 'lang': self.lang})
             self.task.set_up()
             self.task.do_business()
             self.result = login
@@ -139,4 +140,60 @@ class SetupLoginTask(Command):
     def commit(self):
         if not self.errors:
             return to_model_list(self.create_login.commit()) + to_model_list(self.task.commit())
+
+
+class ChangeLoginStatus(NodeSearch):
+    def __init__(self, login_id, status, **kwargs):
+        super(ChangeLoginStatus, self).__init__(login_id, status=status, **kwargs)
+
+    def do_business(self, stop_on_error=False):
+        super(ChangeLoginStatus, self).do_business(stop_on_error)
+        self.result.status = self.status
+        login_status = LoginStatus(label=self.status)
+        self.login_status = login_status
+        self.login_status_future = login_status._put_async()
+
+    def commit(self):
+        self.login_status_future.get_result()
+        return [self.result, LoginStatusArc(origin=self.result.key, destination=self.login_status.key)]
+
+
+class SaveSiteUser(Command):
+    def __init__(self, site, user, **kwargs):
+        super(SaveSiteUser, self).__init__(site=site, user=user, **kwargs)
+
+    def set_up(self):
+        self._future = Arc.query(Arc.origin == to_node_key(self.site),
+                                 Arc.destination == to_node_key(self.user)).count_async()
+
+    def do_business(self, stop_on_error=False):
+        if self._future.get_result():
+            self.result = True
+
+    def commit(self):
+        if not self.result:
+            return SiteUser(origin=to_node_key(self.site), destination=to_node_key(self.user))
+
+
+class SendLoginEmail(CommandList):
+    def __init__(self, login_id, callback, **kwargs):
+        site_search = DestinationsSearch(LoginSite, int(login_id))
+        user_search = DestinationsSearch(LoginUser, int(login_id))
+        change_login = ChangeLoginStatus(login_id, LOGIN_EMAIL)
+        cmds = [change_login, site_search, user_search]
+        super(SendLoginEmail, self).__init__(cmds, site_search=site_search, user_search=user_search, callback=callback,
+                                             change_login=change_login, **kwargs)
+
+
+    def do_business(self, stop_on_error=True):
+        super(SendLoginEmail, self).do_business(stop_on_error)
+        user = self.user_search.result[0]
+        site = self.site_search.result[0]
+        email_search = OriginsSearch(EmailUser, user)
+        CommandList([SaveSiteUser(site, user), email_search]).execute()
+        self.callback(self.change_login.result, site, user, email_search.result[0])
+
+
+    def execute(self, stop_on_error=True):
+        super(SendLoginEmail, self).execute(stop_on_error)
 

@@ -38,7 +38,8 @@ class EmailUser(Arc):
 class SiteOwner(Arc):
     pass
 
-
+class SiteUser(Arc):
+    pass
 # Login Process data. Records the login process and its status and history
 
 LOGIN_CALL = 'CALL'

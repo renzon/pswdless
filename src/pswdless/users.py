@@ -6,7 +6,7 @@ from google.appengine.ext import ndb
 from webapp2_extras.i18n import gettext as _
 
 from gaebusiness.business import Command
-from gaegraph.business_base import NeighborsSearch, NodeSearch
+from gaegraph.business_base import DestinationsSearch, NodeSearch
 from pswdless.model import PswdUserEmail, EmailUser, PswdUser
 import re
 
@@ -40,7 +40,7 @@ class FindOrCreateUser(Command):
         if not self.errors and not self.result:
             pswd_email = self._future.get_result()
             if pswd_email:
-                search = NeighborsSearch(EmailUser, pswd_email)
+                search = DestinationsSearch(EmailUser, pswd_email)
                 search.execute()
                 self.result = search.result[0]
             else:

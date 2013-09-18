@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from base import GAETestCase
-from gaegraph.business_base import NeighborsSearch
+from gaegraph.business_base import DestinationsSearch
 from gaegraph.model import to_node_key
 from mock import Mock
 from pswdless import sites, users, facade
@@ -42,7 +42,7 @@ class SaveSiteTests(GAETestCase):
         site = save_site.result
         self.assertEqual(domain, site.domain)
         self.assertIsNotNone(site.token)
-        search = NeighborsSearch(SiteOwner, user)
+        search = DestinationsSearch(SiteOwner, user)
         search.execute()
         self.assertListEqual([site.key], [s.key for s in search.result])
 
@@ -66,7 +66,7 @@ class InitialSetupTests(GAETestCase):
         find_user = FindOrCreateUser(user_email)
         find_user.execute()
         user = find_user.result
-        search = NeighborsSearch(SiteOwner, to_node_key(user))
+        search = DestinationsSearch(SiteOwner, to_node_key(user))
         search.execute()
         user_sites = search.result
         self.assertListEqual([site.key], [s.key for s in user_sites])
