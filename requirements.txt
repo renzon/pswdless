@@ -4,7 +4,7 @@ gaebusiness==2.5.1
 gaegraph==2.0.0
 mock==1.0.1
 mommygae==1.0
-pswdclient==0.1.4
+pswdclient==0.2.0
 pytz==2013b
 wsgiref==0.1.2
 zenwarch==2.0
