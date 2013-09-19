@@ -27,6 +27,11 @@
         #login_div {
             padding-top: 5px;
         }
+
+        #user_email{
+            color: #ffffff;
+            padding-top: 10px;
+        }
     </style>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -90,13 +95,20 @@
 
                     </ul>
                     <div class="pull-right">
-                        <form class="form-inline" action="/login" method="post">
-                            <div class="input-append" id="login_div">
-                                <input class="span2" name="email" type="text">
-                                {{ xsrf_input() }}
-                                <button class="btn btn-success" type="submit">{% trans %}Login{% endtrans %}</button>
+                        {% if current_user %}
+                            <div id='user_email'>
+                            {{ current_user['email'] }}
                             </div>
-                        </form>
+                        {% else %}
+                            <form class="form-inline" action="/login" method="post">
+                                <div class="input-append" id="login_div">
+                                    <input class="span2" name="email" type="text">
+                                    {{ xsrf_input() }}
+                                    <button class="btn btn-success" type="submit">{% trans %}
+                                        Login{% endtrans %}</button>
+                                </div>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
 

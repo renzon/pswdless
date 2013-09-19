@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import urllib
 from urlparse import urlparse
 from google.appengine.ext import ndb
 
@@ -9,8 +10,9 @@ from gaebusiness.business import CommandList, Command, to_model_list
 from gaebusiness.gaeutil import TaskQueueCommand
 from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
 from gaegraph.model import to_node_key, Arc
+from pswdclient import facade
 from pswdless.languages import setup_locale
-from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, EmailUser
+from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, EmailUser, LOGIN_CLICK, LOGIN_DETAIL
 from pswdless.users import FindUserByIdOrEmail
 import settings
 
@@ -197,3 +199,80 @@ class SendLoginEmail(CommandList):
     def execute(self, stop_on_error=True):
         super(SendLoginEmail, self).execute(stop_on_error)
 
+
+class ValidateLoginStatus(NodeSearch):
+    def __init__(self, login_id, valid_status, new_status, **kwargs):
+        super(ValidateLoginStatus, self).__init__(login_id, valid_status=valid_status, new_status=new_status, **kwargs)
+
+    def do_business(self, stop_on_error=False):
+        super(ValidateLoginStatus, self).do_business(stop_on_error)
+        if self.result is None or self.result.status != self.valid_status:
+            self.add_error('ticket', _('Invalid Call'))
+            return self.errors
+        self.result.status = self.new_status
+        login_status = LoginStatus(label=self.new_status)
+        self.login_status = login_status
+        self.login_status_future = login_status._put_async()
+
+    def commit(self):
+        if not self.errors:
+            self.login_status_future.get_result()
+            return [self.result, LoginStatusArc(origin=self.result.key, destination=self.login_status.key)]
+
+
+class ValidateLoginLink(CommandList):
+    def __init__(self, signed_ticket_id, redirect, **kwargs):
+        cmd = facade.retrieve_dct('ticket', signed_ticket_id, settings.LINK_EXPIRATION)
+        cmd.execute(True)
+        if cmd.result is None:
+            super(ValidateLoginLink, self).__init__([])
+            self.validate_status = None
+            self.add_error('ticket', _('Invalid Call'))
+        else:
+            self.validate_status = ValidateLoginStatus(cmd.result, LOGIN_EMAIL, LOGIN_CLICK)
+            super(ValidateLoginLink, self).__init__([self.validate_status], redirect=redirect)
+
+
+    def do_business(self, stop_on_error=True):
+        super(ValidateLoginLink, self).do_business(stop_on_error)
+        self.result = self.validate_status.result if self.validate_status else None
+        login = self.result
+        if login and not self.errors and self.redirect:
+            query = urllib.urlencode({'ticket': str(login.key.id())})
+            self.redirect(str(login.hook + '?' + query))
+
+    def execute(self, stop_on_error=True):
+        super(ValidateLoginLink, self).execute(stop_on_error)
+
+
+class LogUserIn(DestinationsSearch):
+    def __init__(self, ticket_id, response, url_detail, **kwargs):
+        super(LogUserIn, self).__init__(LoginSite, ticket_id, ticket_id=ticket_id, response=response,
+                                        url_detail=url_detail, **kwargs)
+
+    def do_business(self, stop_on_error=False):
+        super(LogUserIn, self).do_business(stop_on_error)
+        site = self.result[0]
+        if site and not self.errors:
+            log_user_in = facade.log_user_in(site.key.id(), site.token, self.ticket_id, self.response,
+                                             url_detail=self.url_detail)
+            log_user_in.execute()
+            self.errors = log_user_in.errors
+
+
+class UserDetail(CommandList):
+    def __init__(self, app_id, token, ticket_id):
+        site_search = NodeSearch(app_id)
+        user_search = DestinationsSearch(LoginUser, ticket_id)
+
+        super(UserDetail, self).__init__([site_search, CertifySiteToken(token, site_search),
+                                          ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), user_search],
+                                         user_search=user_search)
+
+    def do_business(self, stop_on_error=True):
+        super(UserDetail, self).do_business(stop_on_error)
+        if not self.errors:
+            self.result = self.user_search.result
+            search = OriginsSearch(EmailUser, self.result[0])
+            search.execute(stop_on_error)
+            self.email = search.result[0].email

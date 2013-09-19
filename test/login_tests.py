@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 from base import GAETestCase
 from gaegraph.business_base import DestinationsSearch
 from mock import Mock
 from mommygae import mommy
+from pswdclient import facade as client_facade
 from pswdless import login, facade
-from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus
+from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus, ValidateLoginLink
 
 # mocking i18n
-from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, LoginStatus, PswdUserEmail, EmailUser, SiteUser
+from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, LoginStatus, PswdUserEmail, EmailUser, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
 import settings
 from web import task
 from zen import router
@@ -207,3 +209,54 @@ class SendEmailTests(GAETestCase):
 
         # Callback call
         callback_flag.assert_called_once_with()
+
+
+class ValidateLoginLinkTests(GAETestCase):
+    def _assert_error(self, token):
+        validate_cmd = ValidateLoginLink(token,None)
+        validate_cmd.execute()
+        self.assertDictEqual({'ticket': 'Invalid Call'}, validate_cmd.errors)
+
+    def _assert_wrong_status(self, status):
+        login = Login(status=status, hook='https://pswdless.appspot.com/foo')
+        login.put()
+        cmd = client_facade.sign_dct('ticket', login.key.id())
+        cmd.execute()
+        self._assert_error(cmd.result)
+
+    def test_invalid_token(self):
+        self._assert_error('invalid token')
+
+    def test_already_clicked(self):
+        self._assert_wrong_status(LOGIN_CLICK)
+
+    def test_already_got_detail(self):
+        self._assert_wrong_status(LOGIN_DETAIL)
+
+    def test_not_existing_login(self):
+        cmd = client_facade.sign_dct('ticket', 2)
+        cmd.execute()
+        self._assert_error(cmd.result)
+
+    def test_success(self):
+        lg = Login(status=LOGIN_EMAIL, hook='https://pswdless.appspot.com/foo')
+        lg.put()
+
+        cmd = client_facade.sign_dct('ticket', lg.key.id())
+        cmd.execute()
+        redirect_mock=Mock()
+        validate_cmd = facade.validate_login_link(cmd.result,redirect_mock)
+        validate_cmd.execute()
+        self.assertDictEqual({}, validate_cmd.errors)
+        login_db = validate_cmd.result
+        self.assertEqual(lg.key, login_db.key)
+        self.assertEqual(login_db.status, LOGIN_CLICK)
+        search = DestinationsSearch(LoginStatusArc, login_db)
+        search.execute()
+        self.assertEqual(1, len(search.result))
+        lg_status = search.result[0]
+        self.assertIsInstance(lg_status, LoginStatus)
+        self.assertEqual(lg_status.label, LOGIN_CLICK)
+        redirect_mock.assert_called_once_with(lg.hook+('?ticket=%s'%lg.key.id()))
+
+

@@ -35,7 +35,7 @@ def send_login_email(_render, login_id, lang):
         cmd = pswdclient.sign_dct('ticket', login.key.id())
         cmd.execute()
         signed = cmd.result
-        link = settings.APP_HOME + router.to_path(redirect, signed)
+        link = settings.APP_HOME + router.to_path(redirect, lang, signed)
         values = {'APP_NAME': settings.APP_NAME, 'site': site, 'login_link': link}
         body = _render('templates/login_email.txt', values)
         mail.send_mail(settings.EMAIL_SENDER, email.email,
