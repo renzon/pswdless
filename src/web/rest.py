@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import json
-import logging
 from pswdless import facade
 
 
@@ -29,8 +28,22 @@ def login(_resp, **kwargs):
             errors = cmd.errors
         else:
             ticket = json.dumps({'ticket': str(cmd.result.key.id())})
-            logging.critical(ticket)
             return _resp.write(ticket)
+
+    _resp.status_code = 400
+    return _resp.write(json.dumps(errors))
+
+
+def detail(_resp, **kwargs):
+    errors = _check_params(('app_id', 'token', 'ticket'), (), kwargs.keys())
+    if not errors:
+        cmd = facade.user_detail(**kwargs)
+        cmd.execute()
+        if cmd.errors:
+            errors = cmd.errors
+        else:
+            user = json.dumps({'id': str(cmd.result[0].key.id()), 'email': cmd.email})
+            return _resp.write(user)
 
     _resp.status_code = 400
     return _resp.write(json.dumps(errors))

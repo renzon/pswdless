@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import sys
 import os
 #Put lib on path, once Google App Engine does not allow doing it directly
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 from pswdless.security import extract_xsrf_token
 from webapp2_extras import i18n
@@ -14,6 +15,7 @@ import traceback
 import webapp2
 from zen import router
 from zen.router import PathNotFound
+from pswdless import security
 
 
 def _extract_values(handler, param, default_value=""):
@@ -58,6 +60,7 @@ class BaseHandler(webapp2.RequestHandler):
             values['XSRF_TOKEN'] = xsrf_token
             i18n_obj = i18n.get_i18n()
             values['CURRENT_LANGUAGE'] = i18n_obj.locale
+            values['current_user'] = security.current_user_and_email(self.request)
             return self.response.write(tmpl.render(template_name, values))
 
         convention_params = {"_req": self.request,

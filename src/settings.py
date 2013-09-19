@@ -20,3 +20,5 @@ EMAIL_SENDER = 'Passwordless<login@pswdless.appspotmail.com>'
 
 # See queue.yaml for configuration
 TASK_HERO = 'hero'
+
+LINK_EXPIRATION = 3600  # link must be used on 3600 seconds (1 hour)

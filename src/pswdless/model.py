@@ -16,7 +16,7 @@ class Site(Searchable):
 
     @classmethod
     def find_by_domain(cls, domain):
-        return cls.query(cls.domain==domain).order(cls.creation)
+        return cls.query(cls.domain == domain).order(cls.creation)
 
 # User data
 class PswdUser(Searchable):
@@ -38,14 +38,18 @@ class EmailUser(Arc):
 class SiteOwner(Arc):
     pass
 
+
 class SiteUser(Arc):
     pass
+
 # Login Process data. Records the login process and its status and history
 
 LOGIN_CALL = 'CALL'
 LOGIN_EMAIL = 'EMAIL'
+LOGIN_CLICK = 'CLICK'
+LOGIN_DETAIL = 'DETAIL'
 
-LOGIN_STATUSES = [LOGIN_CALL, LOGIN_EMAIL]
+LOGIN_STATUSES = [LOGIN_CALL, LOGIN_EMAIL, LOGIN_CLICK, LOGIN_DETAIL]
 
 
 class Login(Searchable):
@@ -54,7 +58,7 @@ class Login(Searchable):
 
 
 class LoginStatus(Node):
-    label = ndb.StringProperty(required=True, indexed=False)
+    label = ndb.StringProperty(required=True, indexed=False, choices=LOGIN_STATUSES)
 
 
 class LoginUser(Arc):

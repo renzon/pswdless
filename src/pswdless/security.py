@@ -21,6 +21,11 @@ def generate_xsrf_token():
     cmd.execute()
     return cmd.result, random
 
+def current_user_and_email(request):
+    cmd=facade.logged_user(request)
+    cmd.execute()
+    return cmd.result
+
 
 def xsrf(fcn):
     def wrapper(_dependencies, _req, _resp, xsrf_token=None, **kwargs):
