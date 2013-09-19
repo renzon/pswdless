@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from datetime import datetime, timedelta
 import urllib
 from urlparse import urlparse
 from google.appengine.ext import ndb
@@ -74,9 +75,27 @@ class CertifySiteCredentials(CommandList):
         return super(CertifySiteCredentials, self).execute(stop_on_error)
 
 
+class AntiSpanSearch(FindUserByIdOrEmail):
+    def do_business(self, stop_on_error=True):
+        super(AntiSpanSearch, self).do_business(stop_on_error)
+        if self.result:
+            arc = LoginUser.find_last(self.result).get()
+            if arc:
+                search = NodeSearch(arc.origin.id())
+                search.execute(True)
+                lg = search.result
+
+                def is_spam(login):
+                    elapsed = datetime.now() - lg.creation
+                    return lg.status in (LOGIN_CALL, LOGIN_EMAIL) and elapsed < timedelta(hours=1)
+
+                if is_spam(lg):
+                    self.add_error('spam', _('Spam not allowed'))
+
+
 class ValidateLoginCall(CommandList):
     def __init__(self, site_id, site_token, hook, user_id=None, user_email=None):
-        user_search = FindUserByIdOrEmail(user_id, user_email)
+        user_search = AntiSpanSearch(user_id, user_email)
         certify_site = CertifySiteCredentials(site_id, site_token, hook)
         self.user_search = user_search
         self.site_search = certify_site
