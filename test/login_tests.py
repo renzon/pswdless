@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from google.appengine.api import urlfetch
+from datetime import datetime, timedelta
 from google.appengine.ext import ndb
 from base import GAETestCase
 from gaegraph.business_base import DestinationsSearch
@@ -74,6 +74,54 @@ class ValidateLoginCallTest(GAETestCase):
         self.assertIsNotNone(validate_cmd.user, validate_cmd.errors)
         self.assertIsNotNone(validate_cmd.site, validate_cmd.errors)
         self.assertEqual(site.key, validate_cmd.site.key, validate_cmd.errors)
+
+    def test_spam(self):
+        site = mommy.make_one(Site, domain='www.pswd.com')
+        user = mommy.make_one(PswdUser)
+        ndb.put_multi([site, user])
+        create_login = CreateLogin(user, site, 'hook')
+        create_login.execute()
+        # time.sleep(3)  # giving time because eventual consistency
+        validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
+                                         user.key.id())
+        validate_cmd.execute()
+        self.assertDictEqual({'spam': 'Spam not allowed'}, validate_cmd.errors)
+
+    def test_success_after_one_hour(self):
+        site = mommy.make_one(Site, domain='www.pswd.com')
+        user = mommy.make_one(PswdUser)
+        ndb.put_multi([site, user])
+        create_login = CreateLogin(user, site, 'hook')
+
+        create_login.execute()
+        lg = Login.query().get()
+        lg.creation = datetime.now() - timedelta(hours=1, minutes=1)
+        lg.put()
+
+        validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
+                                         user.key.id())
+        validate_cmd.execute()
+        self.assertDictEqual({}, validate_cmd.errors)
+
+    def _assert_succes_with_status(self, status):
+        site = mommy.make_one(Site, domain='www.pswd.com')
+        user = mommy.make_one(PswdUser)
+        ndb.put_multi([site, user])
+        create_login = CreateLogin(user, site, 'hook')
+        create_login.execute()
+        lg = Login.query().get()
+        lg.status = status
+        lg.put()
+        validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
+                                         user.key.id())
+        validate_cmd.execute()
+        self.assertDictEqual({}, validate_cmd.errors)
+
+    def test_success_with_click_status(self):
+        self._assert_succes_with_status(LOGIN_CLICK)
+
+    def test_success_with_DETAIL_status(self):
+        self._assert_succes_with_status(LOGIN_DETAIL)
 
 
 class CreateLoginTests(GAETestCase):
@@ -213,7 +261,7 @@ class SendEmailTests(GAETestCase):
 
 class ValidateLoginLinkTests(GAETestCase):
     def _assert_error(self, token):
-        validate_cmd = ValidateLoginLink(token,None)
+        validate_cmd = ValidateLoginLink(token, None)
         validate_cmd.execute()
         self.assertDictEqual({'ticket': 'Invalid Call'}, validate_cmd.errors)
 
@@ -244,8 +292,8 @@ class ValidateLoginLinkTests(GAETestCase):
 
         cmd = client_facade.sign_dct('ticket', lg.key.id())
         cmd.execute()
-        redirect_mock=Mock()
-        validate_cmd = facade.validate_login_link(cmd.result,redirect_mock)
+        redirect_mock = Mock()
+        validate_cmd = facade.validate_login_link(cmd.result, redirect_mock)
         validate_cmd.execute()
         self.assertDictEqual({}, validate_cmd.errors)
         login_db = validate_cmd.result
@@ -257,6 +305,6 @@ class ValidateLoginLinkTests(GAETestCase):
         lg_status = search.result[0]
         self.assertIsInstance(lg_status, LoginStatus)
         self.assertEqual(lg_status.label, LOGIN_CLICK)
-        redirect_mock.assert_called_once_with(lg.hook+('?ticket=%s'%lg.key.id()))
+        redirect_mock.assert_called_once_with(lg.hook + ('?ticket=%s' % lg.key.id()))
 
 

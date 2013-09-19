@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import json
 from gaegraph.business_base import DestinationsSearch
 from pswdclient import facade as pswdclient_facade
 from pswdless import facade, languages
@@ -22,6 +23,9 @@ def index(_write_tmpl, _req, email):
     cmd.execute()
     if not cmd.errors:
         _write_tmpl("templates/login.html")
+    else:
+        msgs=json.loads(cmd.errors['msg'])
+        _write_tmpl("templates/errors.html",{'errors':msgs})
 
 
 def redirect(_handler, _resp, _write_tmpl, lang, signed_ticket_id):

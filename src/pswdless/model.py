@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 #Abstraction for classes that can be searchable on site
 from google.appengine.ext import ndb
-from gaegraph.model import Node, Arc
+from gaegraph.model import Node, Arc, to_node_key
 
 
 class Searchable(Node):
@@ -62,7 +62,9 @@ class LoginStatus(Node):
 
 
 class LoginUser(Arc):
-    pass
+    @classmethod
+    def find_last(cls, user):
+        return cls.query(cls.destination == to_node_key(user)).order(-cls.creation)
 
 
 class LoginSite(Arc):
