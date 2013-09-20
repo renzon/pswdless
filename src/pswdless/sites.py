@@ -24,16 +24,21 @@ class SaveSite(Command):
     def set_up(self):
         parse_result = urlparse(self._url)
         domain = parse_result.netloc.split(':')[0] or self._url
-        token = urandom(16).encode('hex')
-        self.result = Site(domain=domain, token=token)
-        self._future = self.result._put_async()
+        if domain:
+            token = urandom(16).encode('hex')
+            self.result = Site(domain=domain, token=token)
+            self._future = self.result._put_async()
+        else:
+            self.add_error('domain', _('Domain should not be empty'))
 
     def do_business(self, stop_on_error=False):
-        site_key = self._future.get_result()
-        self._to_commit = SiteOwner(origin=to_node_key(self._user), destination=site_key)
+        if not self.errors:
+            site_key = self._future.get_result()
+            self._to_commit = SiteOwner(origin=to_node_key(self._user), destination=site_key)
 
     def commit(self):
-        return self._to_commit
+        if not self.errors:
+            return self._to_commit
 
 
 class InitialSetup(Command):

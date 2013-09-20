@@ -1,0 +1,19 @@
+{% extends "templates/base.html" %}
+{% block body %}
+    <div class="row">
+        <div class="span12" style="text-align: center; padding: 80px 0 300px;" >
+            <h1>{% trans %}You must log in to access this content{% endtrans %}</h1>
+
+            <form class="form-inline" action="/login" method="post">
+                <div class="input-append">
+                    <input class="span2" name="email" type="text"
+                           placeholder="{% trans %}Type your email{% endtrans %}"/>
+                    {{ xsrf_input() }}
+                    <button class="btn btn-success" type="submit">{% trans %}
+                        Login{% endtrans %}</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

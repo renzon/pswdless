@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import json
 from pswdless import facade
+from pswdless.security import logged_ajax, xsrf, current_user_and_email
 
 
 def _check_params(mandatory_params, optional_params, current_params):
@@ -31,7 +32,7 @@ def login(_resp, **kwargs):
             return _resp.write(ticket)
 
     _resp.status_code = 400
-    return _resp.write(json.dumps(errors))
+    return _resp.write(json.dumps({'errors': errors}))
 
 
 def detail(_resp, **kwargs):
@@ -46,5 +47,25 @@ def detail(_resp, **kwargs):
             return _resp.write(user)
 
     _resp.status_code = 400
-    return _resp.write(json.dumps(errors))
+    return _resp.write(json.dumps({'errors': errors}))
+
+
+@logged_ajax
+@xsrf
+def save_site(_req, _resp, **kwargs):
+    errors = _check_params(('domain',), (), kwargs.keys())
+    if not errors:
+        user_detail = current_user_and_email(_req)
+        cmd = facade.save_site(user_detail['id'], **kwargs)
+        cmd.execute()
+        if cmd.errors:
+            errors = cmd.errors
+        else:
+            site = cmd.result
+            site_dct=site.to_dict(include=('domain','token'))
+            site_dct['id']=str(site.key.id())
+            return _resp.write(site_dct)
+
+    _resp.status_code = 400
+    return _resp.write(json.dumps({'errors': errors}))
 

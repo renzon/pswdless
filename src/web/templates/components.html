@@ -1,0 +1,63 @@
+{% extends "templates/base.html" %}
+{% block navbar %}{{ select_navbar('SITES') }}{% endblock %}
+{% block head %}
+    <style>
+
+        th {
+            background-color: gainsboro;
+        }
+    </style>
+    <script type="text/javascript" src="/static/js/angular.js"></script>
+    <script type="text/javascript" src="/static/js/sites/site_api.js"></script>
+    <script type="text/javascript" src="/static/js/sites/site_manager.js"></script>
+    <script type="text/javascript">
+        var app = angular.module('siteManagerTest', ['siteManager'])
+
+        app.config(
+                function ($interpolateProvider) {
+                    $interpolateProvider.startSymbol('{_').endSymbol('_}');
+                }
+        )
+
+        function SiteController($scope) {
+
+        }
+
+
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="span12" ng-app="siteManagerTest" ng-controller="SiteController">
+
+            <h1>{% trans %}My Sites{% endtrans %}</h1>
+
+            <domain placeholder="{% trans %}Type your site domain{% endtrans %}"
+                    label="{% trans %}Add Domain{% endtrans %}"
+                    error-header="{% trans %}Error(s):{% endtrans %}"></domain>
+            <p>{% trans %}To edit your domain, click on it. After edit, press enter.{% endtrans %}</p>
+            <table class="table table-striped table-bordered  table-hover" contenteditable="true">
+                <thead>
+                <tr>
+                    <th>{% trans %}App Id{% endtrans %}</th>
+                    <th>{% trans %}Domain{% endtrans %}</th>
+                    <th>{% trans %}Token{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>foo.com</td>
+                    <td>987987erjljlerjjlker</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>bar.com</td>
+                    <td>987987erjljlerjjlker</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

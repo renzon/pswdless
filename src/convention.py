@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import json
 import sys
 import os
 #Put lib on path, once Google App Engine does not allow doing it directly
@@ -49,7 +50,11 @@ class BaseHandler(webapp2.RequestHandler):
         self.make_convetion()
 
     def make_convetion(self):
-        kwargs = dict(_extract_values(self, a) for a in self.request.arguments())
+        angular_ajax_accept = r'application/json, text/plain, */*'
+        if self.request.accept.header_value == angular_ajax_accept:
+            kwargs = json.loads(self.request.body)
+        else:
+            kwargs = dict(_extract_values(self, a) for a in self.request.arguments())
 
         def write_tmpl(template_name, values={}):
             values['APP_NAME'] = settings.APP_NAME
