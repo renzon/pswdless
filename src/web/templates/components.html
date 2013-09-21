@@ -6,9 +6,10 @@
         th {
             background-color: gainsboro;
         }
+    table.table td{ vertical-align: middle;}
     </style>
     <script type="text/javascript" src="/static/js/angular.js"></script>
-    <script type="text/javascript" src="/static/js/sites/site_api.js"></script>
+    <script type="text/javascript" src="/static/js/sites/site_api_mock.js"></script>
     <script type="text/javascript" src="/static/js/sites/site_manager.js"></script>
     <script type="text/javascript">
         var app = angular.module('siteManagerTest', ['siteManager'])
@@ -19,7 +20,17 @@
                 }
         )
 
-        function SiteController($scope) {
+        function SiteController($scope, SiteApi) {
+            $scope.sites = [];
+            $scope.loadingSites = true;
+            $scope.addSite = function (site) {
+                $scope.sites.unshift(site);
+            }
+            SiteApi.getSites().success(function (sites) {
+                $scope.sites = sites;
+            }).always(function () {
+                        $scope.loadingSites = false;
+                    });
 
         }
 
@@ -32,32 +43,25 @@
 
             <h1>{% trans %}My Sites{% endtrans %}</h1>
 
-            <domain placeholder="{% trans %}Type your site domain{% endtrans %}"
+            <domain add-site="addSite(site)" placeholder="{% trans %}Type your site domain{% endtrans %}"
                     label="{% trans %}Add Domain{% endtrans %}"
                     error-header="{% trans %}Error(s):{% endtrans %}"></domain>
-            <p>{% trans %}To edit your domain, click on it. After edit, press enter.{% endtrans %}</p>
-            <table class="table table-striped table-bordered  table-hover" contenteditable="true">
-                <thead>
-                <tr>
-                    <th>{% trans %}App Id{% endtrans %}</th>
-                    <th>{% trans %}Domain{% endtrans %}</th>
-                    <th>{% trans %}Token{% endtrans %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>foo.com</td>
-                    <td>987987erjljlerjjlker</td>
-                </tr>
+            <div ng-show="sites.length!=0">
+                <p>{% trans %}To edit your domain, click on it. After edit, press enter.{% endtrans %}</p>
 
-                <tr>
-                    <td>2</td>
-                    <td>bar.com</td>
-                    <td>987987erjljlerjjlker</td>
-                </tr>
-                </tbody>
-            </table>
+                <sitelist id-header='{% trans %}App Id{% endtrans %}'
+                          domain-header='{% trans %}Domain{% endtrans %}'
+                          token-header='{% trans %}Token{% endtrans %}'
+                          save-label='{% trans %}Save{% endtrans %}'
+                          refresh-label='{% trans %}Refresh{% endtrans %}'
+                          refresh-confirmation='{% trans %}If you refresh the token, you will need to change this token on your site. Are you sure you want refresh it? {% endtrans %}'
+                          sites="sites"></sitelist>
+
+            </div>
+            <div ng-show="sites.length==0" style="margin-bottom: 400px">
+                <span ng-show="loadingSites"><img src="/static/img/ajax-loader.gif"/> {% trans %}Loading
+                    sites{% endtrans %}</span>
+            </div>
         </div>
     </div>
 {% endblock %}

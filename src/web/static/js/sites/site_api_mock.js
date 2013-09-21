@@ -7,6 +7,10 @@ mod.factory('SiteApi', function ($rootScope) {
                     this.successCallback = callback;
                     return this;
                 },
+                'error': function (callback) {
+                    this.errorCallback = callback;
+                    return this;
+                },
                 'always': function (callback) {
                     this.alwaysCallback = callback;
                     return this;
@@ -16,14 +20,17 @@ mod.factory('SiteApi', function ($rootScope) {
 
             function executeAsync() {
                 setTimeout(function () {
-                    if (httpMock.successCallback !== undefined) {
+                    if (httpMock.successCallback !== undefined && returnValue.domain !== '') {
                         httpMock.successCallback(returnValue);
+                    }
+                    if (httpMock.errorCallback !== undefined && returnValue.domain === '') {
+                        httpMock.errorCallback({'errors': {'domain': 'Domain should not be empty'}});
                     }
                     if (httpMock.alwaysCallback !== null) {
                         httpMock.alwaysCallback(returnValue);
                     }
                     $rootScope.$digest()
-                }, 1000);
+                }, 10);
             }
 
             executeAsync();
@@ -31,19 +38,28 @@ mod.factory('SiteApi', function ($rootScope) {
 
 
         }
-        var id = 0;
+        var id = 1;
 
-        var saveSite = function saveSite(domain) {
-            id++;
-            return createHttpMock({
-                'id': ''+id,
-                'domain': domain,
-                'token': '343jhjhjdfhfd' + id
-            })
 
-        }
+        return {
+            'saveSite': function (domain) {
+                id++;
+                return createHttpMock({
+                    'id': '' + id,
+                    'domain': domain,
+                    'token': '343jhjhjdfhfd' + id
+                });
 
-        return {'saveSite': saveSite}
-
+            },
+            'getSites': function () {
+                return createHttpMock([
+                    {'id': '1', 'domain': 'www.foo.com', 'token': '343jhjhjdfhfd1'}
+                ]);
+            }, 'updateSite': function e(site) {
+                return createHttpMock('ok');
+            }, 'refreshToken': function (site) {
+                return createHttpMock('asdfasdfasdf' + site.id)
+            }
+        };
     }
 )
