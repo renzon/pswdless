@@ -32,7 +32,7 @@ def login(_resp, **kwargs):
             return _resp.write(ticket)
 
     _resp.status_code = 400
-    return _resp.write(json.dumps({'errors': errors}))
+    return _resp.write(json.dumps(errors))
 
 
 def detail(_resp, **kwargs):

@@ -95,7 +95,7 @@ class XSRFCoolieTests(GAETestCase):
         next_process = Mock()
         middlewares.xsrf_cookie(request, resp, next_process)
         resp.set_cookie.assert_any_call(settings.XSRF_TOKEN, token, httponly=True, overwrite=True)
-        resp.set_cookie.assert_any_call(settings.XSRF_ANGULAR_COOKIE, random_number, httponly=True, overwrite=True)
+        resp.set_cookie.assert_any_call(settings.XSRF_ANGULAR_COOKIE, random_number, overwrite=True)
         generate_xsrf_token_mock.assert_called_once_with()
         next_process.assert_called_once_with()
 
