@@ -1,35 +1,5 @@
-{% extends "templates/base.html" %}
-{% block navbar %}{{ select_navbar('SITES') }}{% endblock %}
-{% block body %}
-    <div class="row-fluid">
-        <div class="span12">
-
-            <h1>{% trans %}My Sites{% endtrans %}</h1>
-
-            <div class="well">
-                <table class="table table-striped table-hover" contenteditable="true">
-                    <thead>
-                    <tr>
-                        <th>{% trans %}Id{% endtrans %}</th>
-                        <th>{% trans %}Domain{% endtrans %}</th>
-                        <th>{% trans %}Token{% endtrans %}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>foo.com</td>
-                        <td>987987erjljlerjjlker</td>
-                    </tr>
-
-                    <tr>
-                        <td>2</td>
-                        <td>bar.com</td>
-                        <td>987987erjljlerjjlker</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+{% extends "templates/sites_mock.html" %}
+{% block api_head %}
+    <script type="text/javascript" src="/static/js/angular.min.js"></script>
+    <script type="text/javascript" src="/static/js/sites/site_api.js"></script>
 {% endblock %}

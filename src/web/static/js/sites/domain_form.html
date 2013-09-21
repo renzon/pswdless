@@ -1,0 +1,17 @@
+<div>
+    <div class="input-append">
+        <input type="text" placeholder="{_ placeholder _}" ng-model="domain"/>
+        <button class="btn btn-success" type="submit" ng-click="saveSite()" ng-hide="showAjaxLoader">{_ label _}
+        </button>
+        <img src="/static/img/ajax-loader.gif" ng-show="showAjaxLoader"/>
+    </div>
+    <div class='alert alert-block alert-error' ng-show="errors">
+        <h3>{_ errorHeader _}</h3>
+        <ul >
+    <li ng-repeat="e in errors" ><b>{_ e _}</b></li>
+        </ul>
+    </div>
+</div>
+
+
+
