@@ -70,8 +70,6 @@ class UpdateSite(DestinationsSearch):
             elif self.token:
                 site_found.token = urandom(16).encode('hex')
             self._site_future = site_found.put_async()
-            key = destinations_cache_key(SiteOwner, self.user)
-            memcache.delete(key)
         else:
             self.add_error('credentials', _('Site not found'))
 
