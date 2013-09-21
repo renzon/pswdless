@@ -62,10 +62,67 @@ def save_site(_req, _resp, **kwargs):
             errors = cmd.errors
         else:
             site = cmd.result
-            site_dct=site.to_dict(include=('domain','token'))
-            site_dct['id']=str(site.key.id())
-            return _resp.write(site_dct)
+            site_dct = site.to_dict(include=('domain', 'token'))
+            site_dct['id'] = str(site.key.id())
+            return _resp.write(json.dumps(site_dct))
 
     _resp.status_code = 400
     return _resp.write(json.dumps({'errors': errors}))
+
+
+@logged_ajax
+@xsrf
+def get_sites(_req, _resp, **kwargs):
+    errors = _check_params((), (), kwargs.keys())
+    if not errors:
+        user_detail = current_user_and_email(_req)
+        cmd = facade.get_sites(user_detail['id'], **kwargs)
+        cmd.execute()
+        if cmd.errors:
+            errors = cmd.errors
+        else:
+
+            def extract_site_dct(site):
+                site_dct = site.to_dict(include=('domain', 'token'))
+                site_dct['id'] = str(site.key.id())
+                return site_dct
+
+            sites_dct = [extract_site_dct(site) for site in cmd.result]
+
+            return _resp.write(json.dumps(sites_dct))
+
+    _resp.status_code = 400
+    return _resp.write(json.dumps({'errors': errors}))
+
+
+@logged_ajax
+@xsrf
+def update_site(_req, _resp, **kwargs):
+    errors = _check_params(('id', 'domain'), (), kwargs.keys())
+    if not errors:
+        user_detail = current_user_and_email(_req)
+        cmd = facade.update_site(user_detail['id'], kwargs['id'],kwargs['domain'])
+        cmd.execute()
+        if cmd.errors:
+            errors = cmd.errors
+        else:
+            return _resp.write(cmd.result.domain)
+    _resp.status_code = 400
+    return _resp.write(json.dumps({'errors': errors}))
+
+@logged_ajax
+@xsrf
+def refresh_site_token(_req, _resp, **kwargs):
+    errors = _check_params(('id',), (), kwargs.keys())
+    if not errors:
+        user_detail = current_user_and_email(_req)
+        cmd = facade.refresh_site_token(user_detail['id'], kwargs['id'])
+        cmd.execute()
+        if cmd.errors:
+            errors = cmd.errors
+        else:
+            return _resp.write(cmd.result.token)
+    _resp.status_code = 400
+    return _resp.write(json.dumps({'errors': errors}))
+
 

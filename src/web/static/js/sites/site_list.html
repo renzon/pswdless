@@ -1,14 +1,14 @@
-<table class="table table-striped table-bordered  table-hover">
+<table class="table table-bordered  table-hover">
     <thead>
     <tr>
-        <th>{_ idHeader _}</th>
-        <th>{_ domainHeader _}</th>
+        <th class='id-column'>{_ idHeader _}</th>
+        <th class='domain-column'>{_ domainHeader _}</th>
         <th>{_ tokenHeader _}</th>
     </tr>
     </thead>
     <tbody>
 
-    <tr ng-repeat="site in sites">
+    <tr ng-class-odd="'info'" ng-class-even="'error'" ng-repeat="site in sites">
         <td>{_ site.id _}</td>
         <td><span ng-hide='site.editing' ng-click="editSite(site)">{_ site.domain _}</span>
             <span ng-show='site.editing' class="input-append">

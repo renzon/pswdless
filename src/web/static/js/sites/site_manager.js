@@ -1,3 +1,25 @@
+var app = angular.module('siteManagerApp', ['siteManager'])
+
+app.config(
+    function ($interpolateProvider) {
+        $interpolateProvider.startSymbol('{_').endSymbol('_}');
+    }
+)
+
+function SiteManagerCtrl($scope, SiteApi) {
+    $scope.sites = [];
+    $scope.loadingSites = true;
+    $scope.addSite = function (site) {
+        $scope.sites.unshift(site);
+    }
+    SiteApi.getSites().success(function (sites) {
+        $scope.sites = sites;
+    }).always(function () {
+            $scope.loadingSites = false;
+        });
+
+}
+
 var mod = angular.module('siteManager', ['siteAjax'])
 
 mod.directive('domain', function () {
@@ -55,8 +77,9 @@ mod.directive('sitelist', function () {
             $scope.updateSite = function (site) {
                 var postData = {id: site.id, domain: site.domain}
                 site.saving = true;
-                SiteApi.updateSite(postData).success(function () {
+                SiteApi.updateSite(postData).success(function (domain) {
                     site.editing = false;
+                    site.domain=domain;
                 }).error(function () {
                         alert("It was not possible changing the site's domain");
                     }).always(function () {
@@ -71,7 +94,7 @@ mod.directive('sitelist', function () {
 
             $scope.refreshToken = function (site) {
                 if (confirm($scope.refreshConfirmation)) {
-                    site.refresing = true;
+                    site.refreshing = true;
                     var postData = {id: site.id};
                     SiteApi.refreshToken(postData).success(function (newToken) {
                         site.token = newToken;

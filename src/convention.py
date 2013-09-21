@@ -51,7 +51,9 @@ class BaseHandler(webapp2.RequestHandler):
 
     def make_convetion(self):
         angular_ajax_accept = r'application/json, text/plain, */*'
-        if self.request.accept.header_value == angular_ajax_accept:
+        header_value = getattr(self.request, 'accept', None)
+        header_value = getattr(header_value, 'header_value', None)
+        if header_value == angular_ajax_accept and self.request.body:
             kwargs = json.loads(self.request.body)
         else:
             kwargs = dict(_extract_values(self, a) for a in self.request.arguments())

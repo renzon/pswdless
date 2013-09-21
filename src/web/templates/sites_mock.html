@@ -4,42 +4,31 @@
     <style>
 
         th {
-            background-color: gainsboro;
+            background-color: silver;
         }
-    table.table td{ vertical-align: middle;}
+
+        th.id-column {
+            width: 15%;
+        }
+
+        th.domain-column {
+            width: 40%;
+        }
+
+        table.table td {
+            vertical-align: middle;
+        }
     </style>
     <script type="text/javascript" src="/static/js/angular.js"></script>
-    <script type="text/javascript" src="/static/js/sites/site_api_mock.js"></script>
+    {% block api_head %}
+        <script type="text/javascript" src="/static/js/sites/site_api_mock.js"></script>
+    {% endblock %}
     <script type="text/javascript" src="/static/js/sites/site_manager.js"></script>
-    <script type="text/javascript">
-        var app = angular.module('siteManagerTest', ['siteManager'])
 
-        app.config(
-                function ($interpolateProvider) {
-                    $interpolateProvider.startSymbol('{_').endSymbol('_}');
-                }
-        )
-
-        function SiteController($scope, SiteApi) {
-            $scope.sites = [];
-            $scope.loadingSites = true;
-            $scope.addSite = function (site) {
-                $scope.sites.unshift(site);
-            }
-            SiteApi.getSites().success(function (sites) {
-                $scope.sites = sites;
-            }).always(function () {
-                        $scope.loadingSites = false;
-                    });
-
-        }
-
-
-    </script>
 {% endblock %}
 {% block body %}
     <div class="row">
-        <div class="span12" ng-app="siteManagerTest" ng-controller="SiteController">
+        <div class="span12" ng-app="siteManagerApp" ng-controller="SiteManagerCtrl">
 
             <h1>{% trans %}My Sites{% endtrans %}</h1>
 
@@ -47,7 +36,7 @@
                     label="{% trans %}Add Domain{% endtrans %}"
                     error-header="{% trans %}Error(s):{% endtrans %}"></domain>
             <div ng-show="sites.length!=0">
-                <p>{% trans %}To edit your domain, click on it. After edit, press enter.{% endtrans %}</p>
+                <p>{% trans %}To edit your site's domain, click on it's Domain column.{% endtrans %}</p>
 
                 <sitelist id-header='{% trans %}App Id{% endtrans %}'
                           domain-header='{% trans %}Domain{% endtrans %}'

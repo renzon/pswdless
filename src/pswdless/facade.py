@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from mock import Mock
 from pswdless import languages
 from pswdless.login import SetupLoginTask, SendLoginEmail, ValidateLoginLink, LogUserIn, UserDetail
-from pswdless.sites import InitialSetup, FindCurrentSite, SaveSite
+from pswdless.sites import InitialSetup, FindCurrentSite, SaveSite, FindUserSites, UpdateSite
 
 languages.i18n = Mock()
 
@@ -42,3 +42,15 @@ def user_detail(app_id, token, ticket):
 
 def save_site(user, domain):
     return SaveSite(user, domain)
+
+
+def get_sites(user):
+    return FindUserSites(user)
+
+
+def update_site(user_id, site_id, new_domain):
+    return UpdateSite(user_id, site_id, new_domain)
+
+
+def refresh_site_token(user_id, site_id):
+    return UpdateSite(user_id, site_id,token=True)

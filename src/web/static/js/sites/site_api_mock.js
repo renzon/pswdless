@@ -30,7 +30,7 @@ mod.factory('SiteApi', function ($rootScope) {
                         httpMock.alwaysCallback(returnValue);
                     }
                     $rootScope.$digest()
-                }, 10);
+                }, 1000);
             }
 
             executeAsync();
@@ -55,9 +55,11 @@ mod.factory('SiteApi', function ($rootScope) {
                 return createHttpMock([
                     {'id': '1', 'domain': 'www.foo.com', 'token': '343jhjhjdfhfd1'}
                 ]);
-            }, 'updateSite': function e(site) {
-                return createHttpMock('ok');
-            }, 'refreshToken': function (site) {
+            },
+            'updateSite': function e(site) {
+                return createHttpMock(site.domain);
+            },
+            'refreshToken': function (site) {
                 return createHttpMock('asdfasdfasdf' + site.id)
             }
         };
