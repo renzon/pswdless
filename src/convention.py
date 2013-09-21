@@ -6,6 +6,7 @@ import os
 #Put lib on path, once Google App Engine does not allow doing it directly
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
+
 from pswdless.security import extract_xsrf_token
 from webapp2_extras import i18n
 import middlewares
