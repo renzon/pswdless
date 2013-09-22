@@ -8,7 +8,7 @@
     </thead>
     <tbody>
 
-    <tr ng-class-odd="'info'" ng-class-even="'error'" ng-repeat="site in sites">
+    <tr ng-class-odd="'info'" ng-repeat="site in sites">
         <td>{_ site.id _}</td>
         <td><span ng-hide='site.editing' ng-click="editSite(site)">{_ site.domain _}</span>
             <span ng-show='site.editing' class="input-append">
@@ -18,8 +18,6 @@
                     </button>
                 <img src="/static/img/ajax-loader.gif" ng-show="site.saving"/>
             </span>
-
-
         </td>
         <td>{_ site.token _}
             <button class='btn btn-warning' ng-hide="site.refreshing" ng-click="refreshToken(site)">{_ refreshLabel _}</button>
