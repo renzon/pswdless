@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  Beta\n"
 "Report-Msgid-Bugs-To: renzo.n@gmail.com\n"
-"POT-Creation-Date: 2013-09-13 00:50-0300\n"
+"POT-Creation-Date: 2013-09-24 05:31-0300\n"
 "PO-Revision-Date: 2013-08-28 01:34-0300\n"
 "Last-Translator: Renzo nuccitelli <renzo.n@gmail.com>\n"
 "Language-Team: en_US <LL@li.org>\n"
@@ -18,11 +18,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:49
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:31
+msgid "Wrong site id or token"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:53
+#, python-format
+msgid "Invalid domain: %(domain)s"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:57
+#, python-format
+msgid "Only http or https allowed, not %(protocol)s"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:93
+msgid "Spam not allowed"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:229
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/login.py:249
+msgid "Invalid Call"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/security.py:59
+msgid "Must be logged to make this call"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/security.py:79
+msgid "XSRF Atack!"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:33
+msgid "Domain should not be empty"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:74
+msgid "Site not found"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:91
 msgid "You have no admin permission"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:51
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:93
 msgid "Login with your Google account"
 msgstr ""
 
@@ -32,6 +71,19 @@ msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:26
 msgid "Email is invalid"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:61
+msgid "User not found"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:72
+msgid "One of user id or email must be present"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/task.py:42
+#, python-format
+msgid "%(site)s Login Link"
 msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/api_home.html:17
@@ -238,26 +290,51 @@ msgid ""
 "                                    logged."
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:79
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:82
 msgid "Home"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:82
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites.html:7
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:85
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:33
 msgid "My Sites"
 msgstr "Meus Sites"
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:85
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:88
 msgid "API"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:88
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:91
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/languages.html:6
 msgid "Languages"
 msgstr "Línguas"
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:96
-msgid "Login"
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:104
+msgid ""
+"\n"
+"                                        Logout"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:111
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_required.html:10
+msgid "Type your email"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/base.html:113
+msgid ""
+"\n"
+"                                        Login"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/errors.html:5
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_error.html:5
+#, python-format
+msgid "%(login_msg)s"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/errors.html:8
+msgid ""
+" Something is wrong with the login process, sorry for inconvenience. You "
+"can see error messages bellow:"
 msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/home.html:5
@@ -366,24 +443,125 @@ msgid ""
 "            "
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login.html:7
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login.html:5
 msgid "Login Message"
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login.html:9
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login.html:8
 #, python-format
 msgid " Check your email. %(APP_NAME)s will send you a link so you can login."
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites.html:13
-msgid "Id"
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login.html:12
+msgid ""
+" Don't forget checking the spam box, once some email providers can "
+"automatically filter it."
 msgstr ""
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites.html:14
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_email.txt:1
+#, python-format
+msgid ""
+"\n"
+"\n"
+" Hi,\n"
+"   You are receiving this automatic email because you've have asked the "
+"website %(domain)s to log in.\n"
+"\n"
+"   If you want log in, click or copy the following link in your browser:\n"
+"\n"
+"   %(login_link)s\n"
+"\n"
+"   If you haven't asked to log in, please disregard this email.\n"
+"\n"
+"   Thanks,\n"
+"   %(APP_NAME)s\n"
+"\n"
+msgstr ""
+" Olá,\n"
+"   Você está recebendo esse email automático porque solicitou para logar "
+"no website %(domain)s .\n"
+"\n"
+"   Se você realmente quer logar, clique ou copie o link abaixo no seu "
+"navegador:\n"
+"\n"
+"   %(login_link)s\n"
+"\n"
+"   Se você não solicitou acesso a esse site, desconsidere esse email.\n"
+"\n"
+"   Obrigado,\n"
+"   %(APP_NAME)s"
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_error.html:8
+msgid " Something is wrong with the login process, sorry for inconvenience."
+msgstr "Algum erro ocorreu no processo de login, desculpe pela incoveniência."
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_error.html:11
+msgid ""
+" For security purpose, the login link has an expiration time and can be "
+"uses only one time."
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_error.html:15
+#, python-format
+msgid " Please, access %(domain)s and try log in again."
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_required.html:5
+msgid "You must log in to access this content"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_required.html:12
+msgid ""
+"\n"
+"                        Login"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:35
+msgid "Type your site domain"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:36
+#, fuzzy
+msgid "Add Domain"
+msgstr "Domínio"
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:37
+msgid "Error(s):"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:39
+msgid "To edit your site's domain, click on it's Domain column."
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:41
+msgid "App Id"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:42
 msgid "Domain"
 msgstr "Domínio"
 
-#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites.html:15
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:43
 msgid "Token"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:44
+msgid "Save"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:45
+msgid "Refresh"
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:46
+msgid ""
+"If you refresh the token, you will need to change this token on your "
+"site. Are you sure you want refresh it? "
+msgstr ""
+
+#: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:51
+msgid ""
+"Loading\n"
+"                    sites"
 msgstr ""
 

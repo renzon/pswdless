@@ -6,7 +6,7 @@ import settings
 
 
 def setup_language(req, resp, next_process):
-    locale = req.cookies.get(settings.LANG_COOKIE)
+    locale = req.get('lang') or req.cookies.get(settings.LANG_COOKIE)
 
     if locale is None:
         locale = req.headers.get("Accept-Language", settings.DEFAULT_LOCALE).split(",")[0]
