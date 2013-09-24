@@ -12,7 +12,7 @@ def setup_language(req, resp, next_process):
         locale = req.headers.get("Accept-Language", settings.DEFAULT_LOCALE).split(",")[0]
         locale = locale.replace("-", "_")
         locale = languages.setup_locale(locale)
-        resp.set_cookie(settings.LANG_COOKIE, locale, httponly=True)
+        resp.set_cookie(settings.LANG_COOKIE, locale, httponly=True, overwrite=True)
     else:
         languages.setup_locale(locale)
     next_process()

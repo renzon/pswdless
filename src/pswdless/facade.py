@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from mock import Mock
-from pswdless import languages
 from pswdless.login import SetupLoginTask, SendLoginEmail, ValidateLoginLink, LogUserIn, UserDetail
 from pswdless.sites import InitialSetup, FindCurrentSite, SaveSite, FindUserSites, UpdateSite
-
-languages.i18n = Mock()
 
 
 def initial_setup():

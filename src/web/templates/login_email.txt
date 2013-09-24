@@ -1,5 +1,4 @@
 {% trans domain=site.domain %}
-
  Hi,
    You are receiving this automatic email because you've have asked the website {{ domain }} to log in.
 
@@ -11,5 +10,4 @@
 
    Thanks,
    {{ APP_NAME }}
-
 {% endtrans %}

@@ -48,13 +48,13 @@ if __name__ == "__main__":
     compile_target = os.path.join(".", "locale")
     target = os.path.join(proj_dir, "src")
 
-    if len(sys.argv) == 1:
-        babel_cfg = os.path.join(i18n_dir, "babel.cfg")
-        msgs_pot = os.path.join(compile_target, "messages.pot")
-        os.system("pybabel extract -F %s -o %s %s" % (babel_cfg, msgs_pot, target))
-        locales = settings.LOCALES
-        for loc in locales:
-            create_or_update_catalog(loc, compile_target, msgs_pot)
+    # if len(sys.argv) == 1:
+    babel_cfg = os.path.join(i18n_dir, "babel.cfg")
+    msgs_pot = os.path.join(compile_target, "messages.pot")
+    os.system("pybabel extract -F %s -o %s %s" % (babel_cfg, msgs_pot, target))
+    locales = settings.LOCALES
+    for loc in locales:
+        create_or_update_catalog(loc, compile_target, msgs_pot)
 
     locale_target = os.path.join(target, "locale")
     compile_po_files(compile_target, locale_target)
