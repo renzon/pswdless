@@ -13,6 +13,7 @@ class SetupLanguageTest(unittest.TestCase):
         # Mocking
         next_process = Mock()
         request = Mock()
+        request.get = Mock(return_value=None)
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
         middlewares.languages.i18n.get_i18n = lambda: i18n_locale
@@ -29,6 +30,7 @@ class SetupLanguageTest(unittest.TestCase):
         # Mocking
         next_process = Mock()
         request = Mock()
+        request.get = Mock(return_value=None)
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
         middlewares.languages.i18n.get_i18n = lambda: i18n_locale
@@ -43,12 +45,13 @@ class SetupLanguageTest(unittest.TestCase):
         # Assertions
         next_process.assert_called_once_with()
         i18n_locale.set_locale.assert_called_once_with("pt_BR")
-        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, "pt_BR", httponly=True)
+        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, "pt_BR", httponly=True, overwrite=True)
 
     def test_language_from_header_not_in_available_languages(self):
         # Mocking
         next_process = Mock()
         request = Mock()
+        request.get = Mock(return_value=None)
         i18n_locale = Mock()
         i18n_locale.set_locale = Mock()
         middlewares.languages.i18n.get_i18n = lambda: i18n_locale
@@ -63,7 +66,8 @@ class SetupLanguageTest(unittest.TestCase):
         # Assertions
         next_process.assert_called_once_with()
         i18n_locale.set_locale.assert_called_once_with(settings.DEFAULT_LOCALE)
-        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, settings.DEFAULT_LOCALE, httponly=True)
+        response.set_cookie.assert_called_once_with(settings.LANG_COOKIE, settings.DEFAULT_LOCALE, httponly=True,
+                                                    overwrite=True)
 
 
 class XSRFCoolieTests(GAETestCase):

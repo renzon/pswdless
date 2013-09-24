@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 import json
 from base import GAETestCase
 from mock import Mock
-from pswdless.model import Site, Login
 from web import rest
 
 
