@@ -36,7 +36,7 @@ def send_login_email(_render, login_id, lang):
         cmd.execute()
         signed = cmd.result
         link = settings.APP_HOME + router.to_path(redirect, lang, signed)
-        values = {'APP_NAME': settings.APP_NAME, 'site': site, 'login_link': link}
+        values = {'APP_NAME': settings.APP_NAME, 'site': site.domain, 'login_link': link}
         body = _render('templates/login_email.txt', values)
         subject=_('%(site)s Login Link') % {'site': site.domain}
         mail.send_mail(settings.EMAIL_SENDER, email.email,

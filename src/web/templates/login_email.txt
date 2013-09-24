@@ -1,6 +1,5 @@
-{% trans domain=site.domain %}
- Hi,
-   You are receiving this automatic email because you've have asked the website {{ domain }} to log in.
+{% trans  %}Hi,
+   You are receiving this automatic email because you've have asked the website {{ site }} to log in.
 
    If you want log in, click or copy the following link in your browser:
 
@@ -9,5 +8,4 @@
    If you haven't asked to log in, please disregard this email.
 
    Thanks,
-   {{ APP_NAME }}
-{% endtrans %}
+   {{ APP_NAME }}{% endtrans %}

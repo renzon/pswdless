@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-09-24 16:49-0300\n"
+"POT-Creation-Date: 2013-09-24 18:15-0300\n"
 "PO-Revision-Date: 2013-09-24 16:26-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: pt_BR <LL@li.org>\n"
@@ -456,15 +456,16 @@ msgstr "Confira seu email. %(APP_NAME)s enviará um link para voce fazer o login
 msgid ""
 " Don't forget checking the spam box, once some email providers can "
 "automatically filter it."
-msgstr "Não esqueça de conferir a caixa de Spam. Alguns podem filtrar o email."
+msgstr ""
+"Não esqueça de conferir a caixa de Spam. Alguns provedores podem filtrar "
+"o email."
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_email.txt:1
-#, fuzzy, python-format
+#, python-format
 msgid ""
-"\n"
-" Hi,\n"
+"Hi,\n"
 "   You are receiving this automatic email because you've have asked the "
-"website %(domain)s to log in.\n"
+"website %(site)s to log in.\n"
 "\n"
 "   If you want log in, click or copy the following link in your browser:\n"
 "\n"
@@ -473,11 +474,12 @@ msgid ""
 "   If you haven't asked to log in, please disregard this email.\n"
 "\n"
 "   Thanks,\n"
-"   %(APP_NAME)s\n"
+"   %(APP_NAME)s"
 msgstr ""
+"\n"
 " Olá,\n"
-"   Você está recebendo esse email automático porque solicitou para logar "
-"no website %(domain)s .\n"
+"   Você está recebendo esse email automático porque solicitou acesso no "
+"website %(site)s .\n"
 "\n"
 "   Se você realmente quer logar, clique ou copie o link abaixo no seu "
 "navegador:\n"
@@ -498,15 +500,17 @@ msgid ""
 " For security purpose, the login link has an expiration time and can be "
 "uses only one time."
 msgstr ""
+" Por questão de segurança, o link de login possui uma data de validade e "
+"só pode ser utilizado uma única vez."
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_error.html:15
 #, python-format
 msgid " Please, access %(domain)s and try log in again."
-msgstr ""
+msgstr " Por favor, acesse %(domain)s e tente novamente."
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_required.html:5
 msgid "You must log in to access this content"
-msgstr ""
+msgstr "Voce precisa estar logado para acessar esse conteúdo"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/login_required.html:12
 msgid ""
@@ -516,20 +520,20 @@ msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:35
 msgid "Type your site domain"
-msgstr ""
+msgstr "Digite o domínio do seu site"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:36
 #, fuzzy
 msgid "Add Domain"
-msgstr "Domínio"
+msgstr "Adicione um Domínio"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:37
 msgid "Error(s):"
-msgstr ""
+msgstr "Erro(s)"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:39
 msgid "To edit your site's domain, click on it's Domain column."
-msgstr ""
+msgstr "Para editar o domínio de seu site, clique na respectiva coluna Domínio"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:41
 msgid "App Id"
@@ -549,17 +553,21 @@ msgstr ""
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:45
 msgid "Refresh"
-msgstr ""
+msgstr "Renovar"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:46
 msgid ""
 "If you refresh the token, you will need to change this token on your "
 "site. Are you sure you want refresh it? "
 msgstr ""
+"Se voce renovar o token, vai precidar alterá-lo em seu site. Tem certeza "
+"que deseja renovar?"
 
 #: /home/renzo/PycharmProjects/pswdless/src/web/templates/sites_mock.html:51
 msgid ""
 "Loading\n"
 "                    sites"
 msgstr ""
+"Carregando\n"
+"                    sites"
 
