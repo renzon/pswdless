@@ -67,3 +67,10 @@ if __name__ == "__main__":
     build_dir = os.path.abspath(os.path.join(PROJECT_PATH, "build", "lib"))
     os.mkdir(build_dir)
     os.path.walk(src_dir, copy_files, None)
+
+    # removing not desired dirs
+
+    for item in os.listdir(build_dir):
+        file=os.path.join(build_dir,item)
+        if os.path.isdir(file) and (file.endswith('.egg') or file.endswith('.egg-info')):
+            shutil.rmtree(file)
