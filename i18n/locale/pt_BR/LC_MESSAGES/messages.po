@@ -63,7 +63,7 @@ msgstr "Não possui permissão de admin"
 
 #: /home/renzo/PycharmProjects/pswdless/src/pswdless/sites.py:93
 msgid "Login with your Google account"
-msgstr "Faça login com su a conta Google"
+msgstr "Faça login com sua conta Google"
 
 #: /home/renzo/PycharmProjects/pswdless/src/pswdless/users.py:22
 msgid "Email is required"
