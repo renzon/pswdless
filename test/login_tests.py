@@ -309,6 +309,6 @@ class ValidateLoginLinkTests(GAETestCase):
         redirect_mock.assert_called_once_with(hook + (expected_query_string % lg.key.id()))
 
     def test_hook_with_query_string(self):
-        self.test_success('https://pswdless.appspot.com/foo?param1=1','?param1=1&ticket=%s')
+        self.test_success('https://pswdless.appspot.com/foo?param1=1', '&ticket=%s')
 
 

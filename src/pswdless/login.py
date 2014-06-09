@@ -13,7 +13,8 @@ from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
 from gaegraph.model import to_node_key, Arc
 from pswdclient import facade
 from pswdless.languages import setup_locale
-from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, EmailUser, LOGIN_CLICK, LOGIN_DETAIL
+from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, \
+    EmailUser, LOGIN_CLICK, LOGIN_DETAIL
 from pswdless.users import FindUserByIdOrEmail
 import settings
 
@@ -47,8 +48,8 @@ class CertifySiteHook(Command):
         return self.errors
 
     def _validate_domain(self, domain, netloc):
-        hook_domain = netloc.split(':')[0] # eliminating the port from de netloc
-        domain = domain.split(':')[0] # eliminating the port from de netloc
+        hook_domain = netloc.split(':')[0]  # eliminating the port from de netloc
+        domain = domain.split(':')[0]  # eliminating the port from de netloc
         if not hook_domain.endswith(domain) and not self.errors:
             self.add_error('domain', _('Invalid domain: %(domain)s') % {'domain': hook_domain})
 
@@ -257,8 +258,13 @@ class ValidateLoginLink(CommandList):
         self.result = self.validate_status.result if self.validate_status else None
         login = self.result
         if login and not self.errors and self.redirect:
+            hook = login.hook
             query = urllib.urlencode({'ticket': str(login.key.id())})
-            self.redirect(str(login.hook + '?' + query))
+            if hook.find('?') >= 0:
+                self.redirect(str(hook + '&' + query))
+            else:
+
+                self.redirect(str(hook + '?' + query))
 
     def execute(self, stop_on_error=True):
         super(ValidateLoginLink, self).execute(stop_on_error)
