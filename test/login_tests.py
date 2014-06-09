@@ -11,7 +11,8 @@ from pswdless import login, facade
 from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus, ValidateLoginLink
 
 # mocking i18n
-from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, LoginStatus, PswdUserEmail, EmailUser, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
+from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, \
+    LoginStatus, PswdUserEmail, EmailUser, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
 import settings
 from web import task
 from zen import router
@@ -50,7 +51,7 @@ class CertifyCredentialsTests(GAETestCase):
     def _assert_hook_error(self, hook, error_dct):
         site = mommy.make_one(Site, domain='www.pswdless.appspot.com')
         site.put()
-        cmd = self._buildCertifyCredentials(site, hook) # ends with co instead of com
+        cmd = self._buildCertifyCredentials(site, hook)  # ends with co instead of com
         cmd.execute()
         self.assertIsNone(cmd.result)
         self.assertDictEqual(error_dct, cmd.errors)
@@ -286,8 +287,8 @@ class ValidateLoginLinkTests(GAETestCase):
         cmd.execute()
         self._assert_error(cmd.result)
 
-    def test_success(self):
-        lg = Login(status=LOGIN_EMAIL, hook='https://pswdless.appspot.com/foo')
+    def test_success(self, hook='https://pswdless.appspot.com/foo', expected_query_string='?ticket=%s'):
+        lg = Login(status=LOGIN_EMAIL, hook=hook)
         lg.put()
 
         cmd = client_facade.sign_dct('ticket', lg.key.id())
@@ -305,6 +306,9 @@ class ValidateLoginLinkTests(GAETestCase):
         lg_status = search.result[0]
         self.assertIsInstance(lg_status, LoginStatus)
         self.assertEqual(lg_status.label, LOGIN_CLICK)
-        redirect_mock.assert_called_once_with(lg.hook + ('?ticket=%s' % lg.key.id()))
+        redirect_mock.assert_called_once_with(hook + (expected_query_string % lg.key.id()))
+
+    def test_hook_with_query_string(self):
+        self.test_success('https://pswdless.appspot.com/foo?param1=1','?param1=1&ticket=%s')
 
 
