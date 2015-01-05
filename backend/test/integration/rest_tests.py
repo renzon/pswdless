@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 from base import GAETestCase
 from mock import Mock
-from web import rest
+from routes import rest
 
 
 class LoginTests(GAETestCase):

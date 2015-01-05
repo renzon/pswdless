@@ -6,9 +6,10 @@ from webapp2_extras.i18n import gettext as _
 
 from pswdless import facade
 from pswdless.languages import setup_locale
+from routes.login import redirect
 import settings
 from tekton import router
-
+from gaecookie import facade as gaecookie_facade
 
 def setup(_resp, _handler):
     _resp.write('Setup disabled. You can enable by removing the coments on web.setup.py')
@@ -30,15 +31,16 @@ def send_login_email(_render, login_id, lang):
     setup_locale(lang)
 
     def send(login, site, user, email):
-        cmd = pswdclient.sign_dct('ticket', login.key.id())
+        cmd = gaecookie_facade.sign('ticket', login.key.id())
         cmd.execute()
         signed = cmd.result
         link = settings.APP_HOME + router.to_path(redirect, lang, signed)
         values = {'APP_NAME': settings.APP_NAME, 'site': site.domain, 'login_link': link}
-        body = _render('templates/login_email.txt', values)
+        body = _render('login_email.txt', values)
         subject=_('%(site)s Login Link') % {'site': site.domain}
-        mail.send_mail(settings.EMAIL_SENDER, email.email,
+        mail.send_mail(settings.SENDER_EMAIL,
+                       email.email,
                        subject,
                        body)
 
-    facade.send_login_email(login_id, send).execute(True)
+    facade.send_login_email(login_id, send).execute()

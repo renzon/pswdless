@@ -27,7 +27,7 @@ class FindOrCreateUserTests(GAETestCase):
         user = neighbor_search.result[0]
         self.assertEqual(user.key, find_user.result.key)
 
-        #finding same user
+        # finding same user
 
         find_user2 = cmd_cls(email=user_email)
         find_user2.execute()
@@ -59,7 +59,7 @@ class FindOrCreateUserTests(GAETestCase):
 class FindUserByIdTests(GAETestCase):
     def test_user_not_found(self, cmd_cls=FindUserById):
         cmd = cmd_cls('1')
-        cmd.execute()
+        self.assertRaises(CommandExecutionException, cmd.execute)
         self.assertDictEqual({'user': 'User not found'}, cmd.errors)
 
     def test_user_found(self, cmd_cls=FindUserById):

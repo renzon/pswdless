@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import json
+from gaepermission.decorator import login_required
 
 from pswdless import facade
-from pswdless.security import logged_ajax, xsrf, current_user_and_email
 
 
 def _check_params(mandatory_params, optional_params, current_params):
@@ -51,8 +51,7 @@ def detail(_resp, **kwargs):
     return _resp.write(json.dumps({'errors': errors}))
 
 
-@logged_ajax
-@xsrf
+@login_required
 def save_site(_req, _resp, **kwargs):
     errors = _check_params(('domain',), (), kwargs.keys())
     if not errors:
@@ -71,13 +70,11 @@ def save_site(_req, _resp, **kwargs):
     return _resp.write(json.dumps({'errors': errors}))
 
 
-@logged_ajax
-@xsrf
-def get_sites(_req, _resp, **kwargs):
+@login_required
+def get_sites(_logged_user,_req, _resp, **kwargs):
     errors = _check_params((), (), kwargs.keys())
     if not errors:
-        user_detail = current_user_and_email(_req)
-        cmd = facade.get_sites(user_detail['id'], **kwargs)
+        cmd = facade.get_sites(_logged_user, **kwargs)
         cmd.execute()
         if cmd.errors:
             errors = cmd.errors
@@ -95,14 +92,11 @@ def get_sites(_req, _resp, **kwargs):
     _resp.status_code = 400
     return _resp.write(json.dumps({'errors': errors}))
 
-
-@logged_ajax
-@xsrf
-def update_site(_req, _resp, **kwargs):
+@login_required
+def update_site(_logged_user,_req, _resp, **kwargs):
     errors = _check_params(('id', 'domain'), (), kwargs.keys())
     if not errors:
-        user_detail = current_user_and_email(_req)
-        cmd = facade.update_site(user_detail['id'], kwargs['id'],kwargs['domain'])
+        cmd = facade.update_site(_logged_user, kwargs['id'],kwargs['domain'])
         cmd.execute()
         if cmd.errors:
             errors = cmd.errors
@@ -111,13 +105,11 @@ def update_site(_req, _resp, **kwargs):
     _resp.status_code = 400
     return _resp.write(json.dumps({'errors': errors}))
 
-@logged_ajax
-@xsrf
-def refresh_site_token(_req, _resp, **kwargs):
+@login_required
+def refresh_site_token(_logged_user,_req, _resp, **kwargs):
     errors = _check_params(('id',), (), kwargs.keys())
     if not errors:
-        user_detail = current_user_and_email(_req)
-        cmd = facade.refresh_site_token(user_detail['id'], kwargs['id'])
+        cmd = facade.refresh_site_token(_logged_user, kwargs['id'])
         cmd.execute()
         if cmd.errors:
             errors = cmd.errors

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from pswdless.security import logged
+from gaepermission.decorator import login_required
 
 
-@logged
+@login_required
 def index(_write_tmpl):
-    _write_tmpl("templates/sites.html")
+    _write_tmpl("sites.html")
 

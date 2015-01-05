@@ -5,16 +5,9 @@ from google.appengine.ext import ndb, testbed
 import webapp2
 
 from base import GAETestCase
+from config import template
 from pswdless.model import Site, PswdUser, PswdUserEmail, Login, LOGIN_CALL, EmailUser, LoginSite, LoginUser
-import tmpl
-from web import task
-
-
-# workaround so i18n work on test (http://stackoverflow.com/questions/14960944/using-webapp2-i18n-in-unit-tests)
-app = webapp2.WSGIApplication()
-request = webapp2.Request({})
-request.app = app
-app.set_globals(app=app, request=request)
+from routes import task
 
 
 class SendLoginEmailTests(GAETestCase):
@@ -33,6 +26,6 @@ class SendLoginEmailTests(GAETestCase):
             [EmailUser(origin=email.key, destination=user.key), LoginUser(origin=login.key, destination=user.key),
              LoginSite(origin=login.key, destination=site.key)])
 
-        task.send_login_email(tmpl.render, str(login.key.id()), 'pt_BR')
+        task.send_login_email(template.render, str(login.key.id()), 'pt_BR')
         messages = mail_stub.get_sent_messages(to='foo@bar.com')
         self.assertEqual(1, len(messages))
