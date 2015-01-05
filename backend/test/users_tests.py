@@ -3,8 +3,9 @@ from __future__ import absolute_import, unicode_literals
 from base import GAETestCase
 from gaebusiness.business import CommandExecutionException
 from gaegraph.business_base import DestinationsSearch
+from gaepermission import facade
+from gaepermission.model import MainUser
 from mommygae import mommy
-from pswdless.model import PswdUserEmail, EmailUser, PswdUser
 from pswdless.users import FindOrCreateUser, FindUserById, FindUserByIdOrEmail
 from pswdless import users
 
@@ -18,42 +19,32 @@ class FindOrCreateUserTests(GAETestCase):
         user_email = 'foo@bar.com'
         find_user = cmd_cls(email=user_email)
         find_user.execute()
-        pswd_email = PswdUserEmail.find_by_email(user_email).get()
-        self.assertIsNotNone(pswd_email)
-        neighbor_search = DestinationsSearch(EmailUser, pswd_email)
-        neighbor_search.execute()
-        self.assertEqual(1, len(neighbor_search.result),
-                         'should be created one, and only one arc linking email with user')
-        user = neighbor_search.result[0]
-        self.assertEqual(user.key, find_user.result.key)
-
+        users = facade.find_users_by_email_starting_with()()
+        self.assertEqual(1, len(users))
+        us = users[0]
+        self.assertEqual('foo@bar.com', us.email)
+        self.assertEqual('foo@bar.com', us.name)
         # finding same user
 
         find_user2 = cmd_cls(email=user_email)
         find_user2.execute()
-        possible_duplicated = PswdUserEmail.find_by_email(user_email).fetch()
-        self.assertEqual(1, len(possible_duplicated))
-        pswd_email2 = possible_duplicated[0]
-        self.assertEqual(pswd_email.key, pswd_email2.key)
-        neighbor_search = DestinationsSearch(EmailUser, pswd_email)
-        neighbor_search.execute()
-        self.assertEqual(1, len(neighbor_search.result),
-                         'should be created one, and only one,arc linking email with user')
-        user2 = neighbor_search.result[0]
-        self.assertEqual(user2.key, find_user2.result.key)
-        self.assertEqual(user.key, user2.key)
+        users = facade.find_users_by_email_starting_with()()
+        self.assertEqual(1, len(users))
+        us = users[0]
+        self.assertEqual('foo@bar.com', us.email)
+        self.assertEqual('foo@bar.com', us.name)
 
-    def test_invalid_email(self, cmd_cls=FindOrCreateUser, empty_error={'email': 'Email is required'}):
-        def assertErrorMessage(email, error_dct):
+    def test_invalid_email(self, cmd_cls=FindOrCreateUser, key='email'):
+        def assertErrorMessage(email, key):
             find_user = cmd_cls(email=email)
             self.assertRaises(CommandExecutionException, find_user.execute)
             self.assertIsNone(find_user.result)
-            self.assertDictEqual(error_dct, find_user.errors)
+            self.assertIn(key, find_user.errors)
 
-        assertErrorMessage('', empty_error)
-        assertErrorMessage('a', {'email': 'Email is invalid'})
-        assertErrorMessage('a@', {'email': 'Email is invalid'})
-        assertErrorMessage('a@foo', {'email': 'Email is invalid'})
+        assertErrorMessage('', key)
+        assertErrorMessage('a', 'email')
+        assertErrorMessage('a@', 'email')
+        assertErrorMessage('a@foo', 'email')
 
 
 class FindUserByIdTests(GAETestCase):
@@ -63,7 +54,7 @@ class FindUserByIdTests(GAETestCase):
         self.assertDictEqual({'user': 'User not found'}, cmd.errors)
 
     def test_user_found(self, cmd_cls=FindUserById):
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         user.put()
         cmd = cmd_cls(str(user.key.id()))
         cmd.execute()
@@ -82,9 +73,4 @@ class FindUserByIdOrEmailTests(FindOrCreateUserTests, FindUserByIdTests):
         FindOrCreateUserTests.test_valid_email(self, FindUserByIdOrEmail)
 
     def test_invalid_email(self, cmd_cls=FindOrCreateUser):
-        FindOrCreateUserTests.test_invalid_email(self, FindUserByIdOrEmail,
-                                                 {'params': 'One of user id or email must be present'})
-
-
-
-
+        FindOrCreateUserTests.test_invalid_email(self, FindUserByIdOrEmail, 'params')

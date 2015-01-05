@@ -7,14 +7,15 @@ from urlparse import urlparse
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import gettext as _
 
-from gaebusiness.business import Command, to_model_list, CommandParallel
+from gaebusiness.business import Command, to_model_list, CommandParallel, CommandExecutionException
 from gaebusiness.gaeutil import TaskQueueCommand
 from gaecookie import facade
-from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
+from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch, SingleDestinationSearch, \
+    CreateSingleOriginArc
 from gaegraph.model import to_node_key, Arc
 from pswdless.languages import setup_locale
 from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, \
-    EmailUser, LOGIN_CLICK, LOGIN_DETAIL
+    LOGIN_CLICK, LOGIN_DETAIL
 from pswdless.users import FindUserByIdOrEmail
 import settings
 
@@ -83,8 +84,8 @@ class CertifySiteCredentials(CommandParallel):
 
 
 class AntiSpanSearch(FindUserByIdOrEmail):
-    def do_business(self, stop_on_error=True):
-        super(AntiSpanSearch, self).do_business(stop_on_error)
+    def do_business(self):
+        super(AntiSpanSearch, self).do_business()
         if self.result:
             arc = LoginUser.find_last(self.result).get()
             if arc:
@@ -187,46 +188,30 @@ class ChangeLoginStatus(NodeSearch):
         return [self.result, LoginStatusArc(origin=self.result.key, destination=self.login_status.key)]
 
 
-class SaveSiteUser(Command):
+class SaveSiteUser(CreateSingleOriginArc):
     def __init__(self, site, user):
-        super(SaveSiteUser, self).__init__()
-        self.user = user
-        self.site = site
-
-    def set_up(self):
-        self._future = Arc.query(Arc.origin == to_node_key(self.site),
-                                 Arc.destination == to_node_key(self.user)).count_async()
-
-    def do_business(self, stop_on_error=False):
-        if self._future.get_result():
-            self.result = True
-
-    def commit(self):
-        if not self.result:
-            return SiteUser(origin=to_node_key(self.site), destination=to_node_key(self.user))
+        super(SaveSiteUser, self).__init__(SiteUser, site, user)
 
 
 class SendLoginEmail(CommandParallel):
     def __init__(self, login_id, callback):
         self.callback = callback
-        self.site_search = DestinationsSearch(LoginSite, int(login_id))
-        self.user_search = DestinationsSearch(LoginUser, int(login_id))
+        self.site_search = SingleDestinationSearch(LoginSite, login_id)
+        self.user_search = SingleDestinationSearch(LoginUser, login_id)
         self.change_login = ChangeLoginStatus(login_id, LOGIN_EMAIL)
-        cmds = [self.change_login, self.site_search, self.user_search]
-        super(SendLoginEmail, self).__init__(*cmds)
+        super(SendLoginEmail, self).__init__(self.change_login, self.site_search, self.user_search)
 
 
     def do_business(self):
         super(SendLoginEmail, self).do_business()
-        user = self.user_search.result[0]
-        site = self.site_search.result[0]
-        email_search = OriginsSearch(EmailUser, user)
-        CommandParallel(SaveSiteUser(site, user), email_search).execute()
-        self.callback(self.change_login.result, site, user, email_search.result[0])
-
-
-    def execute(self):
-        super(SendLoginEmail, self).execute()
+        user = self.user_search.result
+        site = self.site_search.result
+        self.callback(self.change_login.result, site, user)
+        if not self.errors:
+            try:
+                SaveSiteUser(site, user).execute()
+            except CommandExecutionException:
+                pass
 
 
 class ValidateLoginStatus(NodeSearch):

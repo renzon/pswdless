@@ -30,7 +30,7 @@ def setup(_resp, _handler):
 def send_login_email(_render, login_id, lang):
     setup_locale(lang)
 
-    def send(login, site, user, email):
+    def send(login, site, user):
         cmd = gaecookie_facade.sign('ticket', login.key.id())
         cmd.execute()
         signed = cmd.result
@@ -39,7 +39,7 @@ def send_login_email(_render, login_id, lang):
         body = _render('login_email.txt', values)
         subject=_('%(site)s Login Link') % {'site': site.domain}
         mail.send_mail(settings.SENDER_EMAIL,
-                       email.email,
+                       user.email,
                        subject,
                        body)
 

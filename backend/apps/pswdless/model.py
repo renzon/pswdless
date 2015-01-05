@@ -18,21 +18,21 @@ class Site(Searchable):
     def find_by_domain(cls, domain):
         return cls.query(cls.domain == domain).order(cls.creation)
 
-# User data
-class PswdUser(Searchable):
-    pass
+# # User data
+# class PswdUser(Searchable):
+#     pass
+#
+#
+# class PswdUserEmail(Searchable):
+#     email = ndb.StringProperty(required=True)
+#
+#     @classmethod
+#     def find_by_email(cls, email):
+#         return cls.query(cls.email == email.strip())
 
 
-class PswdUserEmail(Searchable):
-    email = ndb.StringProperty(required=True)
-
-    @classmethod
-    def find_by_email(cls, email):
-        return cls.query(cls.email == email.strip())
-
-
-class EmailUser(Arc):
-    pass
+# class EmailUser(Arc):
+#     pass
 
 
 class SiteOwner(Arc):

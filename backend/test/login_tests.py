@@ -6,7 +6,8 @@ from google.appengine.ext import ndb
 
 from base import GAETestCase
 from gaebusiness.business import CommandExecutionException
-from gaegraph.business_base import DestinationsSearch
+from gaegraph.business_base import DestinationsSearch, SingleDestinationSearch
+from gaepermission.model import MainUser
 from mock import Mock
 from mommygae import mommy
 from pswdless import login, facade
@@ -18,8 +19,8 @@ from gaecookie import facade as cookie_facade
 
 
 # mocking i18n
-from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, \
-    LoginStatus, PswdUserEmail, EmailUser, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
+from pswdless.model import Site, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, \
+    LoginStatus, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
 import settings
 from routes import task
 from tekton import router
@@ -85,7 +86,7 @@ class ValidateLoginCallTest(GAETestCase):
 
     def test_spam(self):
         site = mommy.make_one(Site, domain='www.pswd.com')
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         ndb.put_multi([site, user])
         create_login = CreateLogin(user, site, 'hook')
         create_login.execute()
@@ -97,7 +98,7 @@ class ValidateLoginCallTest(GAETestCase):
 
     def test_success_after_one_hour(self):
         site = mommy.make_one(Site, domain='www.pswd.com')
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         ndb.put_multi([site, user])
         create_login = CreateLogin(user, site, 'hook')
 
@@ -113,7 +114,7 @@ class ValidateLoginCallTest(GAETestCase):
 
     def _assert_succes_with_status(self, status):
         site = mommy.make_one(Site, domain='www.pswd.com')
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         ndb.put_multi([site, user])
         create_login = CreateLogin(user, site, 'hook')
         create_login.execute()
@@ -135,7 +136,7 @@ class ValidateLoginCallTest(GAETestCase):
 class CreateLoginTests(GAETestCase):
     def test_success(self):
         site = mommy.make_one(Site)
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         ndb.put_multi([site, user])
         create_login = CreateLogin(user, site, 'hook')
         create_login.execute()
@@ -166,7 +167,7 @@ class CreateLoginTests(GAETestCase):
 class SetupLoginTaskTests(GAETestCase):
     def test_success(self):
         site = mommy.make_one(Site, domain='appspot.com')
-        user = mommy.make_one(PswdUser)
+        user = mommy.make_one(MainUser)
         ndb.put_multi([site, user])
         login.setup_locale = Mock()
         setup_task = facade.setup_login_task(str(site.key.id()), site.token, 'http://pswdless.appspot.com/return',
@@ -224,24 +225,24 @@ class SendEmailTests(GAETestCase):
     def test_success(self):
         # Mocks
         site = Site(domain='pswdless.appspot.com', token='t')
-        user = PswdUser()
-        email = PswdUserEmail(email='foo@bar.com')
+        email = 'foo@bar.com'
+        user = mommy.make_one(MainUser, email=email)
         login = Login(status=LOGIN_CALL, hook='https://pswdless.appspot.com/foo')
-        ndb.put_multi([site, user, email, login])
+        ndb.put_multi([site, user, login])
 
         # Arcs
         ndb.put_multi(
-            [EmailUser(origin=email.key, destination=user.key), LoginUser(origin=login.key, destination=user.key),
+            [LoginUser(origin=login.key, destination=user.key),
              LoginSite(origin=login.key, destination=site.key)])
 
         callback_flag = Mock()
 
         def callback(*args):
             callback_flag()
-            zipped = zip([login, site, user, email], args)
-            for tpl in zipped:
-                self.assertEqual(type(tpl[0]), type(tpl[1]))
-                self.assertEqual(tpl[0].key, tpl[1].key)
+            zipped = zip([login, site, user], args)
+            for expected, current in zipped:
+                self.assertEqual(type(expected), type(current))
+                self.assertEqual(expected.key, current.key)
 
         send_email = facade.send_login_email(str(login.key.id()), callback)
         send_email.execute()
@@ -249,18 +250,14 @@ class SendEmailTests(GAETestCase):
         # Login changes
         login_db = login.key.get()
         self.assertEqual(LOGIN_EMAIL, login_db.status)
-        search = DestinationsSearch(LoginStatusArc, login)
-        search.execute()
-        self.assertEqual(1, len(search.result))
-        login_status = search.result[0]
+        search = SingleDestinationSearch(LoginStatusArc, login)
+        login_status = search()
         self.assertIsInstance(login_status, LoginStatus)
         self.assertEqual(LOGIN_EMAIL, login_status.label)
 
         # Site User creation
-        user_search = DestinationsSearch(SiteUser, site)
-        user_search.execute()
-        self.assertEqual(1, len(user_search.result))
-        db_user = user_search.result[0]
+        user_search = SingleDestinationSearch(SiteUser, site)
+        db_user = user_search()
         self.assertEqual(user.key, db_user.key)
 
         # Callback call
