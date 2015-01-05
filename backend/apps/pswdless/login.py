@@ -83,7 +83,7 @@ class AntiSpanSearch(FindUserByIdOrEmail):
             arc = LoginUser.find_last(self.result).get()
             if arc:
                 search = NodeSearch(arc.origin.id())
-                search.execute(True)
+                search.execute()
                 lg = search.result
 
                 def is_spam(login):
@@ -104,15 +104,15 @@ class ValidateLoginCall(CommandParallel):
         self.site = None
         super(ValidateLoginCall, self).__init__(user_search, certify_site)
 
-    def do_business(self, stop_on_error=True):
-        super(ValidateLoginCall, self).do_business(stop_on_error)
+    def do_business(self):
+        super(ValidateLoginCall, self).do_business()
         if not self.errors:
             self.user = self.user_search.result
             self.site = self.site_search.result
         return self.errors
 
-    def execute(self, stop_on_error=True):
-        return super(ValidateLoginCall, self).execute(stop_on_error)
+    def execute(self):
+        return super(ValidateLoginCall, self).execute()
 
 
 class CreateLogin(Command):
