@@ -1,11 +1,11 @@
 {% trans  %}Hi,
-   You are receiving this automatic email because you've have asked the website {{ site }} to log in.
+You are receiving this automatic email because you've have asked the website {{ site }} to log in.
 
-   If you want log in, click or copy the following link in your browser:
+If you want log in, click or copy the following link in your browser:
 
-   {{ login_link }}
+{{ login_link }}
 
-   If you haven't asked to log in, please disregard this email.
+If you haven't asked to log in, please disregard this email.
 
-   Thanks,
-   {{ APP_NAME }}{% endtrans %}
+Thanks,
+{{ APP_NAME }}{% endtrans %}
