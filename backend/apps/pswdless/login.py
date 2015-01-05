@@ -165,11 +165,12 @@ class SetupLoginTask(Command):
 
 
 class ChangeLoginStatus(NodeSearch):
-    def __init__(self, login_id, status, **kwargs):
-        super(ChangeLoginStatus, self).__init__(login_id, status=status, **kwargs)
+    def __init__(self, login_id, status):
+        super(ChangeLoginStatus, self).__init__(login_id)
+        self.status = status
 
-    def do_business(self, stop_on_error=False):
-        super(ChangeLoginStatus, self).do_business(stop_on_error)
+    def do_business(self):
+        super(ChangeLoginStatus, self).do_business()
         self.result.status = self.status
         login_status = LoginStatus(label=self.status)
         self.login_status = login_status
@@ -181,8 +182,10 @@ class ChangeLoginStatus(NodeSearch):
 
 
 class SaveSiteUser(Command):
-    def __init__(self, site, user, **kwargs):
-        super(SaveSiteUser, self).__init__(site=site, user=user, **kwargs)
+    def __init__(self, site, user):
+        super(SaveSiteUser, self).__init__()
+        self.user = user
+        self.site = site
 
     def set_up(self):
         self._future = Arc.query(Arc.origin == to_node_key(self.site),
@@ -198,17 +201,17 @@ class SaveSiteUser(Command):
 
 
 class SendLoginEmail(CommandParallel):
-    def __init__(self, login_id, callback, **kwargs):
-        site_search = DestinationsSearch(LoginSite, int(login_id))
-        user_search = DestinationsSearch(LoginUser, int(login_id))
-        change_login = ChangeLoginStatus(login_id, LOGIN_EMAIL)
-        cmds = [change_login, site_search, user_search]
-        super(SendLoginEmail, self).__init__(cmds, site_search=site_search, user_search=user_search, callback=callback,
-                                             change_login=change_login, **kwargs)
+    def __init__(self, login_id, callback):
+        self.callback = callback
+        self.site_search = DestinationsSearch(LoginSite, int(login_id))
+        self.user_search = DestinationsSearch(LoginUser, int(login_id))
+        self.change_login = ChangeLoginStatus(login_id, LOGIN_EMAIL)
+        cmds = [self.change_login, self.site_search, self.user_search]
+        super(SendLoginEmail, self).__init__(*cmds)
 
 
-    def do_business(self, stop_on_error=True):
-        super(SendLoginEmail, self).do_business(stop_on_error)
+    def do_business(self):
+        super(SendLoginEmail, self).do_business()
         user = self.user_search.result[0]
         site = self.site_search.result[0]
         email_search = OriginsSearch(EmailUser, user)
@@ -216,8 +219,8 @@ class SendLoginEmail(CommandParallel):
         self.callback(self.change_login.result, site, user, email_search.result[0])
 
 
-    def execute(self, stop_on_error=True):
-        super(SendLoginEmail, self).execute(stop_on_error)
+    def execute(self):
+        super(SendLoginEmail, self).execute()
 
 
 class ValidateLoginStatus(NodeSearch):
