@@ -30,7 +30,7 @@ login._ = lambda s: s
 class CertifyCredentialsTests(GAETestCase):
     def test_id_not_existent(self):
         cmd = CertifySiteCredentials('1', 'foo', r'http://www.pswdless.appspot.com/foo?b=2&p=5')
-        cmd.execute()
+        self.assertRaises(CommandExecutionException, cmd.execute)
         self.assertIsNone(cmd.result)
         self.assertDictEqual({'site': 'Wrong site id or token'}, cmd.errors)
 

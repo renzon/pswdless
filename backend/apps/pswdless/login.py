@@ -7,7 +7,7 @@ from urlparse import urlparse
 from google.appengine.ext import ndb
 from webapp2_extras.i18n import gettext as _
 
-from gaebusiness.business import  Command, to_model_list, CommandParallel
+from gaebusiness.business import Command, to_model_list, CommandParallel
 from gaebusiness.gaeutil import TaskQueueCommand
 from gaecookie import facade
 from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
@@ -43,13 +43,19 @@ class CertifySiteHook(Command):
     def do_business(self, stop_on_error=True):
         parsed_info = urlparse(self._hook)
         site = self.node_search.result
-        self._validate_protocol(parsed_info.scheme)
-        self._validate_domain(site.domain, parsed_info.netloc)
-        return self.errors
+        if site is None:
+            self.add_error('site', _('Wrong site id or token'))
+        else:
+            self._validate_protocol(parsed_info.scheme)
+            self._validate_domain(site.domain, parsed_info.netloc)
+
+    def _hook_domain(self, netloc):
+        hook_domain = netloc.split(':')[0]  # eliminating the port from de netloc
+        return hook_domain
 
     def _validate_domain(self, domain, netloc):
-        hook_domain = netloc.split(':')[0]  # eliminating the port from de netloc
-        domain = domain.split(':')[0]  # eliminating the port from de netloc
+        hook_domain = self._hook_domain(netloc)
+        domain = self._hook_domain(domain)
         if not hook_domain.endswith(domain) and not self.errors:
             self.add_error('domain', _('Invalid domain: %(domain)s') % {'domain': hook_domain})
 
