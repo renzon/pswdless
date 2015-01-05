@@ -59,7 +59,7 @@ class CertifyCredentialsTests(GAETestCase):
         site = mommy.make_one(Site, domain='www.pswdless.appspot.com')
         site.put()
         cmd = self._buildCertifyCredentials(site, hook)  # ends with co instead of com
-        cmd.execute()
+        self.assertRaises(CommandExecutionException,cmd.execute)
         self.assertIsNone(cmd.result)
         self.assertDictEqual(error_dct, cmd.errors)
 
