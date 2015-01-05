@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{% trans %}Security Information{% endtrans %}</h1>
+
+                <p>{% trans %}The email provided by {{ provider }} is already in use. For your security, we are going to
+                    send an email to {{ email }} to ensure it is yours.{% endtrans %}</p>
+
+                <p>{% trans %}This security procedure will be necessary only this time.{% endtrans %}</p>
+
+                <p>{% trans %}Check your spam box, once some providers can filter this email.{% endtrans %}</p></div>
+        </div>
+    </div>
+{% endblock %}
