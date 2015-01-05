@@ -4,9 +4,9 @@ from urlparse import urlparse
 
 from google.appengine.api import users, memcache
 from webapp2_extras.i18n import gettext as _
-from gaegraph.business_base import DestinationsSearch
 
-from gaegraph.model import to_node_key, destinations_cache_key
+from gaegraph.business_base import DestinationsSearch
+from gaegraph.model import to_node_key
 from os import urandom
 from gaebusiness.business import Command
 from pswdless.model import Site, SiteOwner

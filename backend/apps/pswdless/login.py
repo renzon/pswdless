@@ -3,15 +3,15 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime, timedelta
 import urllib
 from urlparse import urlparse
-from google.appengine.ext import ndb
 
+from google.appengine.ext import ndb
 from webapp2_extras.i18n import gettext as _
 
-from gaebusiness.business import CommandList, Command, to_model_list
+from gaebusiness.business import  Command, to_model_list, CommandParallel
 from gaebusiness.gaeutil import TaskQueueCommand
+from gaecookie import facade
 from gaegraph.business_base import NodeSearch, DestinationsSearch, OriginsSearch
 from gaegraph.model import to_node_key, Arc
-from pswdclient import facade
 from pswdless.languages import setup_locale
 from pswdless.model import Login, LOGIN_CALL, LoginStatus, LoginStatusArc, LoginUser, LoginSite, LOGIN_EMAIL, SiteUser, \
     EmailUser, LOGIN_CLICK, LOGIN_DETAIL
@@ -58,22 +58,22 @@ class CertifySiteHook(Command):
             self.add_error('protocol', _('Only http or https allowed, not %(protocol)s') % {'protocol': scheme})
 
 
-class CertifySiteCredentials(CommandList):
+class CertifySiteCredentials(CommandParallel):
     def __init__(self, site_id, site_token, hook):
         node_search = NodeSearch(site_id)
         certify_token = CertifySiteToken(site_token, node_search)
         certify_hook = CertifySiteHook(hook, node_search)
-        super(CertifySiteCredentials, self).__init__([node_search, certify_token, certify_hook])
+        super(CertifySiteCredentials, self).__init__(node_search, certify_token, certify_hook)
         self.site_search = node_search
 
-    def do_business(self, stop_on_error=True):
-        super(CertifySiteCredentials, self).do_business(stop_on_error)
+    def do_business(self):
+        super(CertifySiteCredentials, self).do_business()
         if not self.errors:
             self.result = self.site_search.result
         return self.errors
 
     def execute(self, stop_on_error=True):
-        return super(CertifySiteCredentials, self).execute(stop_on_error)
+        return super(CertifySiteCredentials, self).execute()
 
 
 class AntiSpanSearch(FindUserByIdOrEmail):
@@ -94,7 +94,7 @@ class AntiSpanSearch(FindUserByIdOrEmail):
                     self.add_error('spam', _('Spam not allowed'))
 
 
-class ValidateLoginCall(CommandList):
+class ValidateLoginCall(CommandParallel):
     def __init__(self, site_id, site_token, hook, user_id=None, user_email=None):
         user_search = AntiSpanSearch(user_id, user_email)
         certify_site = CertifySiteCredentials(site_id, site_token, hook)
@@ -102,7 +102,7 @@ class ValidateLoginCall(CommandList):
         self.site_search = certify_site
         self.user = None
         self.site = None
-        super(ValidateLoginCall, self).__init__([user_search, certify_site])
+        super(ValidateLoginCall, self).__init__(user_search, certify_site)
 
     def do_business(self, stop_on_error=True):
         super(ValidateLoginCall, self).do_business(stop_on_error)
@@ -197,7 +197,7 @@ class SaveSiteUser(Command):
             return SiteUser(origin=to_node_key(self.site), destination=to_node_key(self.user))
 
 
-class SendLoginEmail(CommandList):
+class SendLoginEmail(CommandParallel):
     def __init__(self, login_id, callback, **kwargs):
         site_search = DestinationsSearch(LoginSite, int(login_id))
         user_search = DestinationsSearch(LoginUser, int(login_id))
@@ -212,7 +212,7 @@ class SendLoginEmail(CommandList):
         user = self.user_search.result[0]
         site = self.site_search.result[0]
         email_search = OriginsSearch(EmailUser, user)
-        CommandList([SaveSiteUser(site, user), email_search]).execute()
+        CommandParallel(SaveSiteUser(site, user), email_search).execute()
         self.callback(self.change_login.result, site, user, email_search.result[0])
 
 
@@ -221,11 +221,13 @@ class SendLoginEmail(CommandList):
 
 
 class ValidateLoginStatus(NodeSearch):
-    def __init__(self, login_id, valid_status, new_status, **kwargs):
-        super(ValidateLoginStatus, self).__init__(login_id, valid_status=valid_status, new_status=new_status, **kwargs)
+    def __init__(self, login_id, valid_status, new_status):
+        super(ValidateLoginStatus, self).__init__(login_id)
+        self.new_status = new_status
+        self.valid_status = valid_status
 
-    def do_business(self, stop_on_error=False):
-        super(ValidateLoginStatus, self).do_business(stop_on_error)
+    def do_business(self):
+        super(ValidateLoginStatus, self).do_business()
         if self.result is None or self.result.status != self.valid_status:
             self.add_error('ticket', _('Invalid Call'))
             return self.errors
@@ -240,21 +242,22 @@ class ValidateLoginStatus(NodeSearch):
             return [self.result, LoginStatusArc(origin=self.result.key, destination=self.login_status.key)]
 
 
-class ValidateLoginLink(CommandList):
-    def __init__(self, signed_ticket_id, redirect, **kwargs):
-        cmd = facade.retrieve_dct('ticket', signed_ticket_id, settings.LINK_EXPIRATION)
-        cmd.execute(True)
+class ValidateLoginLink(CommandParallel):
+    def __init__(self, signed_ticket_id, redirect):
+        self.redirect = redirect
+        cmd = facade.retrieve('ticket', signed_ticket_id, settings.LINK_EXPIRATION)
+        cmd.execute()
         if cmd.result is None:
-            super(ValidateLoginLink, self).__init__([])
+            super(ValidateLoginLink, self).__init__()
             self.validate_status = None
             self.add_error('ticket', _('Invalid Call'))
         else:
             self.validate_status = ValidateLoginStatus(cmd.result, LOGIN_EMAIL, LOGIN_CLICK)
-            super(ValidateLoginLink, self).__init__([self.validate_status], redirect=redirect)
+            super(ValidateLoginLink, self).__init__(self.validate_status)
 
 
-    def do_business(self, stop_on_error=True):
-        super(ValidateLoginLink, self).do_business(stop_on_error)
+    def do_business(self):
+        super(ValidateLoginLink, self).do_business()
         self.result = self.validate_status.result if self.validate_status else None
         login = self.result
         if login and not self.errors and self.redirect:
@@ -266,8 +269,8 @@ class ValidateLoginLink(CommandList):
 
                 self.redirect(str(hook + '?' + query))
 
-    def execute(self, stop_on_error=True):
-        super(ValidateLoginLink, self).execute(stop_on_error)
+    def execute(self):
+        super(ValidateLoginLink, self).execute()
 
 
 class LogUserIn(DestinationsSearch):
@@ -285,13 +288,13 @@ class LogUserIn(DestinationsSearch):
             self.errors = log_user_in.errors
 
 
-class UserDetail(CommandList):
+class UserDetail(CommandParallel):
     def __init__(self, app_id, token, ticket_id):
         site_search = NodeSearch(app_id)
         user_search = DestinationsSearch(LoginUser, ticket_id)
 
-        super(UserDetail, self).__init__([site_search, CertifySiteToken(token, site_search),
-                                          ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), user_search],
+        super(UserDetail, self).__init__(site_search, CertifySiteToken(token, site_search),
+                                         ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), user_search,
                                          user_search=user_search)
 
     def do_business(self, stop_on_error=True):

@@ -3,13 +3,11 @@ from __future__ import absolute_import, unicode_literals
 
 from google.appengine.api import mail
 from webapp2_extras.i18n import gettext as _
-from pswdclient import facade as pswdclient
 
 from pswdless import facade
 from pswdless.languages import setup_locale
 import settings
-from web.login import redirect
-from zen import router
+from tekton import router
 
 
 def setup(_resp, _handler):

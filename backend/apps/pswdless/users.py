@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
-
 from webapp2_extras.i18n import gettext as _
 
 from gaebusiness.business import Command

@@ -1,21 +1,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from datetime import datetime, timedelta
+
 from google.appengine.ext import ndb
+
 from base import GAETestCase
+from gaebusiness.business import CommandExecutionException
 from gaegraph.business_base import DestinationsSearch
 from mock import Mock
 from mommygae import mommy
-from pswdclient import facade as client_facade
 from pswdless import login, facade
 from pswdless.login import CertifySiteCredentials, ValidateLoginCall, CreateLogin, ChangeLoginStatus, ValidateLoginLink
+from gaepermission import facade as permission_facade
+from gaecookie import facade as cookie_facade
+
+
+
 
 # mocking i18n
 from pswdless.model import Site, PswdUser, Login, LoginUser, LoginSite, LOGIN_CALL, LoginStatusArc, LOGIN_EMAIL, \
     LoginStatus, PswdUserEmail, EmailUser, SiteUser, LOGIN_CLICK, LOGIN_DETAIL
 import settings
-from web import task
-from zen import router
+from routes import task
+from tekton import router
 
 login._ = lambda s: s
 
@@ -263,13 +270,13 @@ class SendEmailTests(GAETestCase):
 class ValidateLoginLinkTests(GAETestCase):
     def _assert_error(self, token):
         validate_cmd = ValidateLoginLink(token, None)
-        validate_cmd.execute()
+        self.assertRaises(CommandExecutionException,validate_cmd.execute)
         self.assertDictEqual({'ticket': 'Invalid Call'}, validate_cmd.errors)
 
     def _assert_wrong_status(self, status):
         login = Login(status=status, hook='https://pswdless.appspot.com/foo')
         login.put()
-        cmd = client_facade.sign_dct('ticket', login.key.id())
+        cmd = cookie_facade.sign('ticket', login.key.id())
         cmd.execute()
         self._assert_error(cmd.result)
 
@@ -283,7 +290,7 @@ class ValidateLoginLinkTests(GAETestCase):
         self._assert_wrong_status(LOGIN_DETAIL)
 
     def test_not_existing_login(self):
-        cmd = client_facade.sign_dct('ticket', 2)
+        cmd = cookie_facade.sign('ticket', 2)
         cmd.execute()
         self._assert_error(cmd.result)
 
@@ -291,7 +298,7 @@ class ValidateLoginLinkTests(GAETestCase):
         lg = Login(status=LOGIN_EMAIL, hook=hook)
         lg.put()
 
-        cmd = client_facade.sign_dct('ticket', lg.key.id())
+        cmd = cookie_facade.sign('ticket', lg.key.id())
         cmd.execute()
         redirect_mock = Mock()
         validate_cmd = facade.validate_login_link(cmd.result, redirect_mock)

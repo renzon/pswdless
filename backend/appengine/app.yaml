@@ -1,11 +1,14 @@
-application: tekton-fullstack
-version: 1
+application: pswdless
+version: 33
 runtime: python27
 api_version: 1
 threadsafe: yes
 
 inbound_services:
 - warmup
+
+builtins:
+- remote_api: on
 
 libraries:
 - name: jinja2
@@ -44,6 +47,11 @@ handlers:
   script: convention.app
   secure: always
   login: admin
+
+- url: /task.*
+  login: admin
+  secure: always
+  script: convention.app
 
 - url: /[^_].*
   script: convention.app

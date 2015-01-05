@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from base import GAETestCase
+from gaebusiness.business import CommandExecutionException
 from gaegraph.business_base import DestinationsSearch
 from mommygae import mommy
 from pswdless.model import PswdUserEmail, EmailUser, PswdUser
@@ -12,8 +13,8 @@ users._ = lambda s: s
 
 
 class FindOrCreateUserTests(GAETestCase):
-    def test_valid_email(self,cmd_cls=FindOrCreateUser):
-        #creating user
+    def test_valid_email(self, cmd_cls=FindOrCreateUser):
+        # creating user
         user_email = 'foo@bar.com'
         find_user = cmd_cls(email=user_email)
         find_user.execute()
@@ -42,45 +43,47 @@ class FindOrCreateUserTests(GAETestCase):
         self.assertEqual(user2.key, find_user2.result.key)
         self.assertEqual(user.key, user2.key)
 
-    def test_invalid_email(self,cmd_cls=FindOrCreateUser,empty_error={'email':'Email is required'}):
-        def assertErrorMessage(email,error_dct):
+    def test_invalid_email(self, cmd_cls=FindOrCreateUser, empty_error={'email': 'Email is required'}):
+        def assertErrorMessage(email, error_dct):
             find_user = cmd_cls(email=email)
-            find_user.execute()
+            self.assertRaises(CommandExecutionException, find_user.execute)
             self.assertIsNone(find_user.result)
             self.assertDictEqual(error_dct, find_user.errors)
 
-        assertErrorMessage('',empty_error)
-        assertErrorMessage('a',{'email': 'Email is invalid'})
-        assertErrorMessage('a@',{'email': 'Email is invalid'})
-        assertErrorMessage('a@foo',{'email': 'Email is invalid'})
+        assertErrorMessage('', empty_error)
+        assertErrorMessage('a', {'email': 'Email is invalid'})
+        assertErrorMessage('a@', {'email': 'Email is invalid'})
+        assertErrorMessage('a@foo', {'email': 'Email is invalid'})
 
 
 class FindUserByIdTests(GAETestCase):
-    def test_user_not_found(self,cmd_cls=FindUserById):
+    def test_user_not_found(self, cmd_cls=FindUserById):
         cmd = cmd_cls('1')
         cmd.execute()
-        self.assertDictEqual({'user': 'User not found'},cmd.errors)
+        self.assertDictEqual({'user': 'User not found'}, cmd.errors)
 
-    def test_user_found(self,cmd_cls=FindUserById):
-        user=mommy.make_one(PswdUser)
+    def test_user_found(self, cmd_cls=FindUserById):
+        user = mommy.make_one(PswdUser)
         user.put()
         cmd = cmd_cls(str(user.key.id()))
         cmd.execute()
-        self.assertDictEqual({},cmd.errors)
-        self.assertEqual(user.key,cmd.result.key)
+        self.assertDictEqual({}, cmd.errors)
+        self.assertEqual(user.key, cmd.result.key)
 
-class FindUserByIdOrEmailTests(FindOrCreateUserTests,FindUserByIdTests):
+
+class FindUserByIdOrEmailTests(FindOrCreateUserTests, FindUserByIdTests):
     def test_user_not_found(self):
-        FindUserByIdTests.test_user_not_found(self,FindUserByIdOrEmail)
+        FindUserByIdTests.test_user_not_found(self, FindUserByIdOrEmail)
 
     def test_user_found(self):
-        FindUserByIdTests.test_user_found(self,FindUserByIdOrEmail)
+        FindUserByIdTests.test_user_found(self, FindUserByIdOrEmail)
 
-    def test_valid_email(self,cmd_cls=FindOrCreateUser):
-         FindOrCreateUserTests.test_valid_email(self,FindUserByIdOrEmail)
+    def test_valid_email(self, cmd_cls=FindOrCreateUser):
+        FindOrCreateUserTests.test_valid_email(self, FindUserByIdOrEmail)
 
-    def test_invalid_email(self,cmd_cls=FindOrCreateUser):
-        FindOrCreateUserTests.test_invalid_email(self,FindUserByIdOrEmail,{'params':'One of user id or email must be present'})
+    def test_invalid_email(self, cmd_cls=FindOrCreateUser):
+        FindOrCreateUserTests.test_invalid_email(self, FindUserByIdOrEmail,
+                                                 {'params': 'One of user id or email must be present'})
 
 
 

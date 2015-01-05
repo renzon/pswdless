@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 from google.appengine.ext import ndb, testbed
 import webapp2
+
 from base import GAETestCase
 from pswdless.model import Site, PswdUser, PswdUserEmail, Login, LOGIN_CALL, EmailUser, LoginSite, LoginUser
 import tmpl
 from web import task
+
 
 # workaround so i18n work on test (http://stackoverflow.com/questions/14960944/using-webapp2-i18n-in-unit-tests)
 app = webapp2.WSGIApplication()
