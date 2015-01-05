@@ -7,18 +7,20 @@ from routes import rest
 
 
 class LoginTests(GAETestCase):
-    def test_mandory_field_not_present(self):
+    def test_mandatory_field_not_present(self):
         resp = Mock()
-        rest.login(resp, app_id='1')
+        response=rest.login(resp, app_id='1')
         errors = {'errors': {'params': 'Missing param(s): hook, token'}}
-        resp.write.assert_called_once_with(json.dumps(errors))
+        self.assert_can_serialize_as_json(response)
+        self.assertDictEqual(errors,response.context)
         self.assertEqual(400, resp.status_code)
 
     def test_unexpected_param(self):
         resp = Mock()
-        rest.login(resp, app_id='1', token='t', hook='h', foo='foo')
+        response=rest.login(resp, app_id='1', token='t', hook='h', foo='foo')
         errors = {'errors': {'params': 'Unexpected param(s): foo'}}
-        resp.write.assert_called_once_with(json.dumps(errors))
+        self.assert_can_serialize_as_json(response)
+        self.assertDictEqual(errors,response.context)
         self.assertEqual(400, resp.status_code)
 
     def test_success(self):

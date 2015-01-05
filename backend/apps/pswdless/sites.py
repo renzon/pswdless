@@ -49,11 +49,14 @@ class FindUserSites(DestinationsSearch):
 
 class UpdateSite(DestinationsSearch):
     def __init__(self, user, site, domain=None, token=False):
-        super(UpdateSite, self).__init__(SiteOwner, user, user=user, site_key=to_node_key(site), domain=domain,
-                                         token=token)
+        super(UpdateSite, self).__init__(SiteOwner, user)
+        self.token = token
+        self.domain = domain
+        self.site_key = to_node_key(site)
+        self.user = user
 
-    def do_business(self, stop_on_error=True):
-        super(UpdateSite, self).do_business(stop_on_error)
+    def do_business(self):
+        super(UpdateSite, self).do_business()
 
         def find_site(site_key):
             for site in self.result:

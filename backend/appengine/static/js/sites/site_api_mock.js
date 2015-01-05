@@ -57,10 +57,10 @@ mod.factory('SiteApi', function ($rootScope) {
                 ]);
             },
             'updateSite': function e(site) {
-                return createHttpMock(site.domain);
+                return createHttpMock({'domain': site.domain});
             },
             'refreshToken': function (site) {
-                return createHttpMock('asdfasdfasdf' + site.id)
+                return createHttpMock({'token': 'asdfasdfasdf' + site.id})
             }
         };
     }

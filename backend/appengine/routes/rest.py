@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import json
-from gaepermission.decorator import login_required
 
+from gaebusiness.business import CommandExecutionException
+from gaecookie.decorator import no_csrf
+from gaepermission.decorator import login_required, login_not_required
 from pswdless import facade
+from tekton.gae.middleware.json_middleware import JsonResponse
 
 
 def _check_params(mandatory_params, optional_params, current_params):
@@ -21,42 +24,45 @@ def _check_params(mandatory_params, optional_params, current_params):
         return {'errors': {'params': 'Unexpected param(s): %s' % unexpected_params}}
 
 
+@login_not_required
+@no_csrf
 def login(_resp, **kwargs):
     errors = _check_params(('app_id', 'token', 'hook'), ('user_id', 'email', 'lang'), kwargs.keys())
     if not errors:
         cmd = facade.setup_login_task(**kwargs)
-        cmd.execute()
-        if cmd.errors:
+        try:
+            ticket = cmd()
+            return JsonResponse.write(ticket.key.id())
+        except CommandExecutionException:
             errors = cmd.errors
-        else:
-            ticket = json.dumps({'ticket': str(cmd.result.key.id())})
-            return _resp.write(ticket)
 
     _resp.status_code = 400
-    return _resp.write(json.dumps(errors))
+    return JsonResponse(errors)
 
 
+@login_not_required
+@no_csrf
 def detail(_resp, **kwargs):
     errors = _check_params(('app_id', 'token', 'ticket'), (), kwargs.keys())
     if not errors:
         cmd = facade.user_detail(**kwargs)
-        cmd.execute()
-        if cmd.errors:
+
+        try:
+            user = cmd()
+            return JsonResponse({'id': str(user.key.id()), 'email': user.email})
+        except CommandExecutionException:
             errors = cmd.errors
-        else:
-            user = json.dumps({'id': str(cmd.result[0].key.id()), 'email': cmd.email})
-            return _resp.write(user)
 
     _resp.status_code = 400
-    return _resp.write(json.dumps({'errors': errors}))
+    return JsonResponse(errors)
 
 
 @login_required
-def save_site(_req, _resp, **kwargs):
+def save_site(_logged_user, _resp, **kwargs):
     errors = _check_params(('domain',), (), kwargs.keys())
     if not errors:
-        user_detail = current_user_and_email(_req)
-        cmd = facade.save_site(user_detail['id'], **kwargs)
+
+        cmd = facade.save_site(_logged_user, **kwargs)
         cmd.execute()
         if cmd.errors:
             errors = cmd.errors
@@ -71,14 +77,12 @@ def save_site(_req, _resp, **kwargs):
 
 
 @login_required
-def get_sites(_logged_user,_req, _resp, **kwargs):
+def get_sites(_logged_user, _resp, **kwargs):
     errors = _check_params((), (), kwargs.keys())
     if not errors:
         cmd = facade.get_sites(_logged_user, **kwargs)
-        cmd.execute()
-        if cmd.errors:
-            errors = cmd.errors
-        else:
+        try:
+            cmd.execute()
 
             def extract_site_dct(site):
                 site_dct = site.to_dict(include=('domain', 'token'))
@@ -87,35 +91,38 @@ def get_sites(_logged_user,_req, _resp, **kwargs):
 
             sites_dct = [extract_site_dct(site) for site in cmd.result]
 
-            return _resp.write(json.dumps(sites_dct))
-
+            return JsonResponse(sites_dct)
+        except CommandExecutionException:
+            errors = cmd.errors
     _resp.status_code = 400
-    return _resp.write(json.dumps({'errors': errors}))
+    return JsonResponse({'errors': errors})
+
 
 @login_required
-def update_site(_logged_user,_req, _resp, **kwargs):
+def update_site(_logged_user, _resp, **kwargs):
     errors = _check_params(('id', 'domain'), (), kwargs.keys())
     if not errors:
-        cmd = facade.update_site(_logged_user, kwargs['id'],kwargs['domain'])
-        cmd.execute()
-        if cmd.errors:
+        cmd = facade.update_site(_logged_user, kwargs['id'], kwargs['domain'])
+        try:
+            site = cmd()
+            return JsonResponse({'domain': site.domain})
+        except CommandExecutionException:
             errors = cmd.errors
-        else:
-            return _resp.write(cmd.result.domain)
     _resp.status_code = 400
-    return _resp.write(json.dumps({'errors': errors}))
+    return JsonResponse({'errors': errors})
+
 
 @login_required
-def refresh_site_token(_logged_user,_req, _resp, **kwargs):
+def refresh_site_token(_logged_user, _resp, **kwargs):
     errors = _check_params(('id',), (), kwargs.keys())
     if not errors:
         cmd = facade.refresh_site_token(_logged_user, kwargs['id'])
-        cmd.execute()
-        if cmd.errors:
+        try:
+            result = cmd()
+            return JsonResponse({'token': result.token})
+        except CommandExecutionException:
             errors = cmd.errors
-        else:
-            return _resp.write(cmd.result.token)
     _resp.status_code = 400
-    return _resp.write(json.dumps({'errors': errors}))
+    return JsonResponse({'errors': errors})
 
 
