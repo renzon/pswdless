@@ -92,7 +92,7 @@ class ValidateLoginCallTest(GAETestCase):
         # time.sleep(3)  # giving time because eventual consistency
         validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
                                          user.key.id())
-        validate_cmd.execute()
+        self.assertRaises(CommandExecutionException, validate_cmd.execute)
         self.assertDictEqual({'spam': 'Spam not allowed'}, validate_cmd.errors)
 
     def test_success_after_one_hour(self):
@@ -270,7 +270,7 @@ class SendEmailTests(GAETestCase):
 class ValidateLoginLinkTests(GAETestCase):
     def _assert_error(self, token):
         validate_cmd = ValidateLoginLink(token, None)
-        self.assertRaises(CommandExecutionException,validate_cmd.execute)
+        self.assertRaises(CommandExecutionException, validate_cmd.execute)
         self.assertDictEqual({'ticket': 'Invalid Call'}, validate_cmd.errors)
 
     def _assert_wrong_status(self, status):
