@@ -1,46 +1,66 @@
 {% extends 'base/base.html' %}
-{% block css %}
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-social.css"/>
-    <link rel="stylesheet" href="/static/font-awesome-4.2.0/css/font-awesome.min.css"/>
-{% endblock %}
 {% block body %}
-    <div class="container text-center">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Tekton</h1>
-                <p>{% trans %}A Full-Stack project for Google App Engine{% endtrans %}</p>
-            </div>
-        </div>
-        <br/>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>
+        {% trans %} Password-less Login!{% endtrans %}
+      </h1>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="well">
-                    <h2>{% trans %}Create CRUD code on
-                        <a href="https://cloud.google.com/products/app-engine/">App Engine</a>{% endtrans %}
-                    </h2>
-                    <br/>
+      <p>
+        {% trans %}Improve your site's User Experience not asking users for a password that will be
+          forgotten!{% endtrans %}
+      </p>
 
-                    <p>
-                        <a href="/courses" class="btn btn-primary"></i>{% trans %} Check Courses App
-                            Out{% endtrans %} &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="well">
-                    <h2>{% trans %}Tekton is open source.{% endtrans %}</h2>
-                    <br/>
+      <p>
+        {% trans %}Don't worry with hash, salt, captchas nor "forgot your password" anymore. Use {{ APP_NAME }} REST API
+          and focus on your awesome site! {{ APP_NAME }} is the lean approach for your login system.{% endtrans %}
+      </p>
 
-                    <p>
-                        <a href="https://github.com/renzon/tekton-fullstack" class="btn btn-social btn-github"><i
-                                class="fa fa-github"></i>{% trans %}Check Git Hub Out{% endtrans %} &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 col-md-offset-3">
-                <iframe width="560" height="315" src="//www.youtube.com/embed/videoseries?list=PLA05yVJtRWYRGIeBxag8uT-3ftcMVT5oF" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
+      <p>
+        <a class="btn btn-primary btn-large" href="/sites">{% trans %}Register Your Site Now {% endtrans %} »</a>
+      </p>
     </div>
+    <div class="row">
+      <div class="col-md-4">
+        <h2>
+          {% trans %}Free and Open Source {% endtrans %}
+        </h2>
+
+        <p>
+          {% trans %}{{ APP_NAME }} is now a free service. More than that, it is Open Source.{% endtrans %}
+        </p>
+
+        <p>
+          <a class="btn btn-success" href="https://github.com/renzon/pswdless" target="_blank">{% trans %} Check on
+            GitHub{% endtrans %} »</a>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h2>
+          {% trans %}Internationalization{% endtrans %}
+        </h2>
+
+        <p>
+          {% trans %}Available in English or Portuguese (Brazil). Not your language? {% endtrans %}
+        </p>
+
+        <p>
+          <a class="btn btn-success" href="/languages">{% trans %}Translate {{ APP_NAME }}{% endtrans %} »</a>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h2>
+          {% trans %}REST API{% endtrans %}
+        </h2>
+
+        <p>
+          {% trans %}Simple and documented REST API.{% endtrans %}
+        </p>
+
+        <p>
+          <a class="btn btn-success" href="/api">{% trans %} API Documentantion{% endtrans %} »</a>
+        </p>
+      </div>
+    </div>
+  </div>
 {% endblock %}

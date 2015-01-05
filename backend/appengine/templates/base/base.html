@@ -17,7 +17,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% block title %}Passwordless: Login without Password{% endblock %}</title>
+  <title>{% block title %}{{ APP_NAME }}: Login without Password{% endblock %}</title>
   <!-- Bootstrap -->
 
   <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -76,7 +76,7 @@
       <ul class="nav navbar-nav">
         {% macro select_tab(tab='') %}
           <li {{ 'class="active"' | safe if tab=='SITES' }}>
-            <a href="/sites">{% trans %}Courses{% endtrans %}</a>
+            <a href="/sites">{% trans %}My Sites{% endtrans %}</a>
           </li>
           <li {{ 'class="active"' | safe if tab=='API' }}>
             <a href="/api">{% trans %}API{% endtrans %}</a>
@@ -125,7 +125,7 @@
 {% block body %}{% endblock %}
 <div class="footer">
   <div class="container">
-    <p class="text-muted text-right">Passwordless:
+    <p class="text-muted text-right">{{ APP_NAME }}:
       <a target="_blank"
          href="https://github.com/renzon/pswdless">GitHub</a>
     </p>

@@ -3,6 +3,7 @@ import jinja2
 from jinja2._markupsafe import Markup
 from webapp2_extras import i18n
 import os
+import settings
 
 _base = os.path.dirname(__file__)
 _base = os.path.join(_base, '..')
@@ -25,6 +26,7 @@ _jinja_environment.filters['json'] = _json_escaped
 
 
 def render(template_name, values={}):
+    values['APP_NAME'] = settings.APP_NAME
     template = _jinja_environment.get_template(template_name)
     return template.render(values)
 
