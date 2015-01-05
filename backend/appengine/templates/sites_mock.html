@@ -1,56 +1,59 @@
-{% extends "templates/base.html" %}
+{% extends "base/base.html" %}
 {% block navbar %}{{ select_navbar('SITES') }}{% endblock %}
-{% block head %}
-    <style>
+{% block css %}
+  <style>
 
-        th {
-            background-color: silver;
-        }
+    th {
+      background-color: silver;
+    }
 
-        th.id-column {
-            width: 15%;
-        }
+    th.id-column {
+      width: 15%;
+    }
 
-        th.domain-column {
-            width: 40%;
-        }
+    th.domain-column {
+      width: 40%;
+    }
 
-        table.table td {
-            vertical-align: middle;
-        }
-    </style>
-    {% block api_head %}
-        <script type="text/javascript" src="/static/js/angular.js"></script>
-        <script type="text/javascript" src="/static/js/sites/site_api_mock.js"></script>
-    {% endblock %}
-    <script type="text/javascript" src="/static/js/sites/site_manager.js"></script>
-
+    table.table td {
+      vertical-align: middle;
+    }
+  </style>
+{% endblock %}
+{% block js %}
+  <script type="text/javascript" src="/static/angular/js/angular.min.js"></script>
+  <script type="text/javascript" src="/static/js/sites/site_manager.js"></script>
+  {% block api_service %}
+    <script type="text/javascript" src="/static/js/sites/site_api_mock.js"></script>
+  {% endblock %}
 {% endblock %}
 {% block body %}
+  <div class="container">
     <div class="row">
-        <div class="span12" ng-app="siteManagerApp" ng-controller="SiteManagerCtrl">
+      <div class="col-md-12" ng-app="siteManagerApp" ng-controller="SiteManagerCtrl">
 
-            <h1>{% trans %}My Sites{% endtrans %}</h1>
+        <h1>{% trans %}My Sites{% endtrans %}</h1>
 
-            <domain add-site="addSite(site)" placeholder="{% trans %}Type your site domain{% endtrans %}"
-                    label="{% trans %}Add Domain{% endtrans %}"
-                    error-header="{% trans %}Error(s):{% endtrans %}"></domain>
-            <div ng-show="sites.length!=0">
-                <p>{% trans %}To edit your site's domain, click on it's Domain column.{% endtrans %}</p>
+        <domain add-site="addSite(site)" placeholder="{% trans %}Type your site domain{% endtrans %}"
+                label="{% trans %}Add Domain{% endtrans %}"
+                error-header="{% trans %}Error(s):{% endtrans %}"></domain>
+        <div ng-show="sites.length!=0">
+          <p>{% trans %}To edit your site's domain, click on it's Domain column.{% endtrans %}</p>
 
-                <sitelist id-header='{% trans %}App Id{% endtrans %}'
-                          domain-header='{% trans %}Domain{% endtrans %}'
-                          token-header='{% trans %}Token{% endtrans %}'
-                          save-label='{% trans %}Save{% endtrans %}'
-                          refresh-label='{% trans %}Refresh{% endtrans %}'
-                          refresh-confirmation='{% trans %}If you refresh the token, you will need to change this token on your site. Are you sure you want refresh it? {% endtrans %}'
-                          sites="sites"></sitelist>
+          <sitelist id-header='{% trans %}App Id{% endtrans %}'
+                    domain-header='{% trans %}Domain{% endtrans %}'
+                    token-header='{% trans %}Token{% endtrans %}'
+                    save-label='{% trans %}Save{% endtrans %}'
+                    refresh-label='{% trans %}Refresh{% endtrans %}'
+                    refresh-confirmation='{% trans %}If you refresh the token, you will need to change this token on your site. Are you sure you want refresh it? {% endtrans %}'
+                    sites="sites"></sitelist>
 
-            </div>
-            <div ng-show="sites.length==0" style="margin-bottom: 400px">
-                <span ng-show="loadingSites"><img src="/static/img/ajax-loader.gif"/> {% trans %}Loading
-                    sites{% endtrans %}</span>
-            </div>
         </div>
+        <div ng-show="sites.length==0" style="margin-bottom: 400px">
+                <span ng-show="loadingSites"><img src="/static/img/ajax.gif"/> {% trans %}Loading
+                  sites{% endtrans %}</span>
+        </div>
+      </div>
     </div>
+  </div>
 {% endblock %}
