@@ -7,7 +7,8 @@ from gaebusiness.business import CommandExecutionException
 from gaecookie.decorator import no_csrf
 from gaepermission.decorator import login_required, login_not_required
 from pswdless import facade
-from tekton.gae.middleware.json_middleware import JsonResponse
+import settings
+from tekton.gae.middleware.json_middleware import JsonResponse, JsonUnsecureResponse
 
 
 def _check_params(mandatory_params, optional_params, current_params):
@@ -33,13 +34,13 @@ def login(_resp, **kwargs):
         cmd = facade.setup_login_task(**kwargs)
         try:
             ticket = cmd()
-            return JsonResponse(ticket.key.id())
+            return JsonUnsecureResponse(ticket.key.id())
         except CommandExecutionException:
             errors = cmd.errors
 
     _resp.status_code = 400
     logging.error(errors)
-    return JsonResponse(errors)
+    return JsonUnsecureResponse(errors)
 
 
 @login_not_required
@@ -48,15 +49,18 @@ def detail(_resp, **kwargs):
     errors = _check_params(('app_id', 'token', 'ticket'), (), kwargs.keys())
     if not errors:
         cmd = facade.user_detail(**kwargs)
-
         try:
             user = cmd()
-            return JsonResponse({'id': str(user.key.id()), 'email': user.email})
+            dct = {'id': str(user.key.id()), 'email': user.email, 'name': user.name,
+                   'tz': user.timezone or settings.DEFAULT_TIMEZONE,
+                   'locale': user.locale or settings.DEFAULT_LOCALE}
+            logging.info(dct)
+            return JsonUnsecureResponse(dct)
         except CommandExecutionException:
             errors = cmd.errors
-
+    logging.error(errors)
     _resp.status_code = 400
-    return JsonResponse(errors)
+    return JsonUnsecureResponse(errors)
 
 
 @login_required

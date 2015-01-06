@@ -96,10 +96,11 @@ class AntiSpanSearch(FindUserByIdOrEmail):
 
                 def is_spam(login):
                     elapsed = datetime.now() - lg.creation
-                    return lg.status in (LOGIN_CALL, LOGIN_EMAIL) and elapsed < timedelta(hours=1)
+                    return lg.status in (LOGIN_CALL, LOGIN_EMAIL) and elapsed < timedelta(
+                        seconds=settings.LINK_EXPIRATION)
 
-                    # if is_spam(lg):
-                    # self.add_error('spam', _('Spam not allowed'))
+                if is_spam(lg):
+                    self.add_error('spam', _('Spam not allowed'))
 
 
 class ValidateLoginCall(CommandParallel):
@@ -285,4 +286,11 @@ class LogUserIn(DestinationsSearch):
             self.errors = log_user_in.errors
 
 
+class UserDetail(CommandParallel):
+    def __init__(self, app_id, token, ticket_id):
+        site_search = NodeSearch(app_id)
+        self.user_search = SingleDestinationSearch(LoginUser, ticket_id)
+
+        super(UserDetail, self).__init__(site_search, CertifySiteToken(token, site_search),
+                                         ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), self.user_search)
 

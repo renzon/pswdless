@@ -20,7 +20,7 @@ APP_HOME = 'http://' + APP_HOST if APP_HOST.startswith('localhost') else 'https:
 # See queue.yaml for configuration
 TASK_HERO = 'hero'
 
-LINK_EXPIRATION = 60  # link must be used on 3600 seconds (1 hour)
+LINK_EXPIRATION = 1800  # link must be used on 1800 seconds (30 minutes)
 
 
 APP_URL = APP_HOME

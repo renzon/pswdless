@@ -1,5 +1,5 @@
 application: pswdless
-version: 33
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -43,15 +43,16 @@ handlers:
   static_files: static\1
   upload: static.*
 
+- url: /task.*
+  login: admin
+  secure: always
+  script: convention.app
+
 - url: /.*tasks.*
   script: convention.app
   secure: always
   login: admin
 
-- url: /task.*
-  login: admin
-  secure: always
-  script: convention.app
 
 - url: /[^_].*
   script: convention.app

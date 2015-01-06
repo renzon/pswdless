@@ -1,4 +1,5 @@
 {% trans  %}Hi,
+
 You are receiving this automatic email because you've have asked the website {{ site }} to log in.
 
 If you want log in, click or copy the following link in your browser:

@@ -4,6 +4,8 @@ import logging
 
 from google.appengine.api import mail
 from webapp2_extras.i18n import gettext as _
+from gaecookie.decorator import no_csrf
+from gaepermission.decorator import login_not_required
 
 from pswdless import facade
 from pswdless.languages import setup_locale
@@ -27,8 +29,8 @@ def setup(_resp, _handler):
     #         return_url=router.to_path(setup)
     #         login_url=users.create_login_url(return_url)
     #         _handler.redirect(login_url)
-
-
+@login_not_required
+@no_csrf
 def send_login_email(_render, login_id, lang):
     logging.info(login_id)
     logging.info(login_id)

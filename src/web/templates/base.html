@@ -68,7 +68,7 @@
     {% endblock %}
 </head>
 </div>
-{% macro select_navbar(selected='HOME') %}
+{% macro select_tab(selected='HOME') %}
 
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -126,7 +126,7 @@
 
 <body>
 <header>
-    {% block navbar %}{{ select_navbar() }}{% endblock %}
+    {% block navbar %}{{ select_tab() }}{% endblock %}
 </header>
 <div class="container">
     {% block body %}{% endblock %}

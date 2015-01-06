@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-#Abstraction for classes that can be searchable on site
+# Abstraction for classes that can be searchable on site
 from google.appengine.ext import ndb
 from gaegraph.model import Node, Arc, to_node_key
 
@@ -17,6 +17,7 @@ class Site(Searchable):
     @classmethod
     def find_by_domain(cls, domain):
         return cls.query(cls.domain == domain).order(cls.creation)
+
 
 # User data
 class PswdUser(Searchable):
