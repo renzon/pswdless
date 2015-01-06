@@ -1,0 +1,63 @@
+application: pswdless
+version: 2
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+inbound_services:
+- warmup
+
+builtins:
+- remote_api: on
+
+libraries:
+- name: jinja2
+  version: "2.6"
+
+- name: webapp2
+  version: "2.5.2"
+
+- name: webob
+  version: "1.2.3"
+
+- name: markupsafe
+  version: "0.15"
+
+- name: setuptools
+  version: "0.6c11"
+
+handlers:
+- url: /
+  script: convention.app
+  secure: always
+
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /favicon\.ico
+  static_files: static/img/favicon.ico
+  upload: static/img/favicon.ico
+
+- url: /static(.*)
+  static_files: static\1
+  upload: static.*
+
+- url: /task.*
+  login: admin
+  secure: always
+  script: convention.app
+
+- url: /.*tasks.*
+  script: convention.app
+  secure: always
+  login: admin
+
+
+- url: /[^_].*
+  script: convention.app
+  secure: always
+
+- url: /_ah/warmup
+  script: routes.warmup.app
+

@@ -1,0 +1,32 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{% trans %}Security Table{% endtrans %}</h1>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>{% trans %}Path{% endtrans %}</th>
+                        <th>{% trans %}Allowed Groups{% endtrans %}</th>
+                        <th>{% trans %}<a href="http://pt.wikipedia.org/wiki/Cross-site_request_forgery">CSRF</a> Security{% endtrans %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for info in path_infos %}
+                        <tr>
+                            <td><a href="{{ info.path }}">{{ info.path }}</a></td>
+                            <td>{{ info.groups }}</td>
+                            <td>
+                                    <span class="label {{ 'label-success' if info.csrf else 'label-danger' }}">
+                                        {{ _('Secure') if info.csrf else _('Unsecure') }}
+                                    </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
