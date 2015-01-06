@@ -9,4 +9,4 @@ If you want log in, click or copy the following link in your browser:
 If you haven't asked to log in, please disregard this email.
 
 Thanks,
-{{ APP_NAME }}{% endtrans %}
+{{ site }}{% endtrans %}
