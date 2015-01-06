@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from datetime import datetime, timedelta
+import logging
 import urllib
 from urlparse import urlparse
 
@@ -97,8 +98,8 @@ class AntiSpanSearch(FindUserByIdOrEmail):
                     elapsed = datetime.now() - lg.creation
                     return lg.status in (LOGIN_CALL, LOGIN_EMAIL) and elapsed < timedelta(hours=1)
 
-                if is_spam(lg):
-                    self.add_error('spam', _('Spam not allowed'))
+                    # if is_spam(lg):
+                    # self.add_error('spam', _('Spam not allowed'))
 
 
 class ValidateLoginCall(CommandParallel):
@@ -142,26 +143,27 @@ class CreateLogin(Command):
                 [(LoginStatusArc, self.login_status), (LoginUser, self.user), (LoginSite, self.site)]]
 
 
-class SetupLoginTask(Command):
+class SetupLoginTask(CommandParallel):
     def __init__(self, site_id, site_token, hook, user_id=None, user_email=None, lang='en_US'):
         setup_locale(lang)
         self.lang = lang
         self.validate_login = ValidateLoginCall(site_id, site_token, hook, user_id, user_email)
         self.hook = hook
-        super(SetupLoginTask, self).__init__()
+        super(SetupLoginTask, self).__init__(self.validate_login)
 
-    def set_up(self):
-        self.validate_login.execute()
-        self.errors = self.validate_login.errors
 
-    def do_business(self, stop_on_error=False):
+    def do_business(self):
+        super(SetupLoginTask, self).do_business()
+        logging.info('SetupLoginTask do_business')
         if not self.errors:
             self.create_login = CreateLogin(self.validate_login.user, self.validate_login.site, self.hook)
             self.create_login.set_up()
             self.create_login.do_business()
             login = self.create_login.result
+            params = {'login_id': str(login.key.id()), 'lang': self.lang}
+            logging.info('SetupLoginTask do_business %r' % params)
             self.task = TaskQueueCommand(settings.TASK_HERO, '/task/send_login_email',
-                                         params={'login_id': str(login.key.id()), 'lang': self.lang}, countdown=4)
+                                         params=params, countdown=4)
             self.task.set_up()
             self.task.do_business()
             self.result = login
@@ -240,6 +242,7 @@ class ValidateLoginLink(CommandParallel):
     def __init__(self, signed_ticket_id, redirect):
         self.redirect = redirect
         cmd = facade.retrieve('ticket', signed_ticket_id, settings.LINK_EXPIRATION)
+        logging.error(settings.LINK_EXPIRATION)
         cmd.execute()
         if cmd.result is None:
             super(ValidateLoginLink, self).__init__()
@@ -282,19 +285,4 @@ class LogUserIn(DestinationsSearch):
             self.errors = log_user_in.errors
 
 
-class UserDetail(CommandParallel):
-    def __init__(self, app_id, token, ticket_id):
-        site_search = NodeSearch(app_id)
-        user_search = DestinationsSearch(LoginUser, ticket_id)
 
-        super(UserDetail, self).__init__(site_search, CertifySiteToken(token, site_search),
-                                         ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), user_search,
-                                         user_search=user_search)
-
-    def do_business(self, stop_on_error=True):
-        super(UserDetail, self).do_business(stop_on_error)
-        if not self.errors:
-            self.result = self.user_search.result
-            search = OriginsSearch(EmailUser, self.result[0])
-            search.execute(stop_on_error)
-            self.email = search.result[0].email

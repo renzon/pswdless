@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import json
+import logging
 
 from gaebusiness.business import CommandExecutionException
 from gaecookie.decorator import no_csrf
@@ -32,11 +33,12 @@ def login(_resp, **kwargs):
         cmd = facade.setup_login_task(**kwargs)
         try:
             ticket = cmd()
-            return JsonResponse.write(ticket.key.id())
+            return JsonResponse(ticket.key.id())
         except CommandExecutionException:
             errors = cmd.errors
 
     _resp.status_code = 400
+    logging.error(errors)
     return JsonResponse(errors)
 
 

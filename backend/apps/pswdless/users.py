@@ -8,6 +8,7 @@ from webapp2_extras.i18n import gettext as _
 from gaebusiness.business import Command, CommandParallel, CommandExecutionException
 from gaegraph.business_base import DestinationsSearch, NodeSearch
 from gaepermission import facade
+from gaepermission.model import MainUser
 
 
 class FindOrCreateUser(CommandParallel):
@@ -27,6 +28,7 @@ class FindOrCreateUser(CommandParallel):
 
 
 class FindUserById(NodeSearch):
+    _model_class = MainUser
     def do_business(self, stop_on_error=False):
         super(FindUserById, self).do_business()
         if self.result is None:

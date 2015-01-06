@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from pswdless.login import SetupLoginTask, SendLoginEmail, ValidateLoginLink, LogUserIn, UserDetail
+from pswdless.login import SetupLoginTask, SendLoginEmail, ValidateLoginLink, LogUserIn
 from pswdless.sites import InitialSetup, FindCurrentSite, SaveSite, FindUserSites, UpdateSite
 
 
@@ -32,10 +32,6 @@ def log_user_in(ticket_id, response, url_detail):
     return LogUserIn(ticket_id, response, url_detail)
 
 
-def user_detail(app_id, token, ticket):
-    return UserDetail(app_id, token, ticket)
-
-
 def save_site(user, domain):
     return SaveSite(user, domain)
 
@@ -49,4 +45,4 @@ def update_site(user_id, site_id, new_domain):
 
 
 def refresh_site_token(user_id, site_id):
-    return UpdateSite(user_id, site_id,token=True)
+    return UpdateSite(user_id, site_id, token=True)
