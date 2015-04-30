@@ -72,7 +72,7 @@ class InitialSetupTests(GAETestCase):
         find_user = FindOrCreateUser(user_email)
         find_user.execute()
         user = find_user.result
-        search = DestinationsSearch(SiteOwner, to_node_key(user))
+        search = SitesSearch(to_node_key(user))
         search.execute()
         user_sites = search.result
         self.assertListEqual([site.key], [s.key for s in user_sites])
