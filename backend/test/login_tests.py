@@ -149,7 +149,8 @@ class CreateLoginTests(GAETestCase):
 
 
         def neighbor(cls):
-            search = DestinationsSearch(cls, login)
+            DestinationsSearch.arc_class = cls
+            search = DestinationsSearch(login)
             search.execute()
             self.assertEqual(1, len(search.result), cls)
             return search.result[0]
@@ -214,7 +215,7 @@ class ChangeLoginStatusTests(GAETestCase):
         self.assertEqual(login.key, modified_login.key)
         login_db = login.key.get()
         self.assertEqual(LOGIN_EMAIL, login_db.status)
-        search = DestinationsSearch(LoginStatusArc, login)
+        search = LoginStatusArcSearch(login)
         search.execute()
         self.assertEqual(1, len(search.result))
         login_status = search.result[0]
