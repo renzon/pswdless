@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-02-25 18:58-0300\n"
+"POT-Creation-Date: 2015-04-30 12:05-0300\n"
 "PO-Revision-Date: 2014-06-26 00:14-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en_US <LL@li.org>\n"
@@ -18,34 +18,422 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: ../../appengine/templates/home.html:11
-#: ../../appengine/templates/multitenant/home.html:11
-msgid "A Full-Stack project for Google App Engine"
+#: ../../appengine/routes/task.py:46
+#, python-format
+msgid "%(site)s Login Link"
 msgstr ""
 
-#: ../../appengine/templates/home.html:19
-#: ../../appengine/templates/multitenant/home.html:20
+#: ../../appengine/templates/api_home.html:18
+msgid "API Documentation"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:21
+#, python-format
 msgid ""
-"Create CRUD code on\n"
-"                        <a href=\"https://cloud.google.com/products/app-"
-"engine/\">App Engine</a>"
+" This documentation provides the necessary information\n"
+"            for %(APP_NAME)s integration on websites. It is supposed that"
+" people reading these docs\n"
+"            has basic knowledge about HTTP GET and POST calls and JSON."
 msgstr ""
 
-#: ../../appengine/templates/home.html:25
-#: ../../appengine/templates/multitenant/home.html:26
+#: ../../appengine/templates/api_home.html:26
+msgid "Table of Contents"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:28
+#: ../../appengine/templates/api_home.html:37
+msgid "Overview"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:29
+msgid "Summary"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:30
+#: ../../appengine/templates/api_home.html:157
+msgid "Registering Sites"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:41
 msgid ""
-" Check Courses App\n"
-"                            Out"
+" The sequence diagram on right shows the overview schema of\n"
+"              authentication. It contains the following steps:"
 msgstr ""
 
-#: ../../appengine/templates/home.html:32
-#: ../../appengine/templates/multitenant/home.html:33
-msgid "Tekton is open source."
+#: ../../appengine/templates/api_home.html:45
+#, python-format
+msgid ""
+" After registering your site, you can make a HTTP Post call\n"
+"                  to %(APP_NAME)s with user email or id;"
 msgstr ""
 
-#: ../../appengine/templates/home.html:37
-#: ../../appengine/templates/multitenant/home.html:38
-msgid "Check Git Hub Out"
+#: ../../appengine/templates/api_home.html:49
+#, python-format
+msgid ""
+" %(APP_NAME)s send an email to user containing a secure login\n"
+"                  link;"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:53
+msgid " User clicks on login link;"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:56
+#, python-format
+msgid ""
+" %(APP_NAME)s send a HTTP Get call to your site so you know she logged\n"
+"                  in;"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:60
+#, python-format
+msgid ""
+" Your site send a HTTP Get call to %(APP_NAME)s asking for user id and\n"
+"                  email;"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:64
+msgid ""
+" After receiving user data, you log the user in and show your welcome\n"
+"                  page;"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:69
+msgid ""
+"Each step, including parameters and response formats, will be explained "
+"in detail on\n"
+"              following sections."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:72
+msgid ""
+"<a href=\"#table_summary\">Summary</a> shows all the available REST api. "
+"The return\n"
+"              format is JSON."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:87
+msgid "Table 1 - Summary"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:92
+msgid "Call"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:93
+msgid "Parameters"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:94
+msgid "Return"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:95
+msgid "Description"
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:101
+#, python-format
+msgid ""
+"<h4>Required</h4>\n"
+"                    <b>app_id (String)</b> - the registered domain "
+"id;<br/>\n"
+"                    <b>token (String)</b> - the registered domain "
+"token;<br/>\n"
+"                    <b>hook (String)</b> - the address on your website "
+"which %(APP_NAME)s will make a\n"
+"                    post call indicating user has logged in.<br/>\n"
+"                    <h4>Optional</h4>\n"
+"                    <b>email (String)</b> - user's email. Ignored if id "
+"is present;<br/>\n"
+"                    <b>user_id (String)</b> - user's id on "
+"%(APP_NAME)s;<br/>\n"
+"                    <b>lang (String)</b> - The language %(APP_NAME)s must"
+" use on email. Available\n"
+"                    values: en_US (English) and pt_BR (Brazilian "
+"Portuguese). Default:\n"
+"                    en_US."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:113
+msgid ""
+"JSON containing the ticket of the login call. Ex:\n"
+"                    {ticket:\"123456\"}."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:115
+msgid ""
+"This call will send user an email containing the login link. One of id or"
+"\n"
+"                    email must be sent. If the two are specified, id will"
+" be used to identify the user\n"
+"                    instead of email.\n"
+"                    Returns a ticket so your website can certify that it "
+"has done this\n"
+"                    call."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:123
+msgid ""
+"<h4>Required</h4>\n"
+"                    <b>ticket (String)</b> - the ticket sent login "
+"call;<br/>\n"
+"                  "
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:127
+msgid ""
+" Your site need to sent a 200 HTTP status code. Any message sent is\n"
+"                    ignored "
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:129
+#, python-format
+msgid ""
+"After user click on link sent by email, %(APP_NAME)s will make a Post\n"
+"                    call on the hook defined on login phase containing "
+"the ticket number. This ticket\n"
+"                    can be used to retrieve user's detail from "
+"%(APP_NAME)s."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:135
+msgid ""
+"<h4>Required</h4>\n"
+"                    <b>token (String)</b> - the registered domain "
+"token;<br/>\n"
+"                    <b>ticket (String)</b> - the code sent to your hook "
+"url.<br/>\n"
+"                  "
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:140
+msgid ""
+"JSON containing user's details. Ex:\n"
+"                    {id:\"654321\",email:\"foo@bar.com\"}."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:142
+msgid ""
+"This call returns the user's details that can save in your site. The id\n"
+"                    of a user will never change, so you can use it as a "
+"strong\n"
+"                    reference. After this call, you can save cookies on "
+"user's browser to keep she\n"
+"                    logged."
+msgstr ""
+
+#: ../../appengine/templates/api_home.html:159
+#, python-format
+msgid ""
+"Prior to make API calls, you need to <a target=\"_blank\" "
+"href=\"/sites\">register</a>\n"
+"          the site which you intend to use %(APP_NAME)s.\n"
+"          After the registration, a token will be assigned to your site "
+"and it will be used on every call.\n"
+"          "
+msgstr ""
+
+#: ../../appengine/templates/home.html:6
+msgid " Password-less Login!"
+msgstr ""
+
+#: ../../appengine/templates/home.html:10
+msgid ""
+"Improve your site's User Experience not asking users for a password that "
+"will be\n"
+"          forgotten!"
+msgstr ""
+
+#: ../../appengine/templates/home.html:15
+#, python-format
+msgid ""
+"Don't worry with hash, salt, captchas nor \"forgot your password\" "
+"anymore. Use %(APP_NAME)s REST API\n"
+"          and focus on your awesome site! %(APP_NAME)s is the lean "
+"approach for your login system."
+msgstr ""
+
+#: ../../appengine/templates/home.html:20
+msgid "Register Your Site Now "
+msgstr ""
+
+#: ../../appengine/templates/home.html:26
+msgid "Free and Open Source "
+msgstr ""
+
+#: ../../appengine/templates/home.html:30
+#, python-format
+msgid "%(APP_NAME)s is now a free service. More than that, it is Open Source."
+msgstr ""
+
+#: ../../appengine/templates/home.html:34
+msgid ""
+" Check on\n"
+"            GitHub"
+msgstr ""
+
+#: ../../appengine/templates/home.html:40
+msgid "Internationalization"
+msgstr ""
+
+#: ../../appengine/templates/home.html:44
+msgid "Available in English or Portuguese (Brazil). Not your language? "
+msgstr ""
+
+#: ../../appengine/templates/home.html:48
+#, python-format
+msgid "Translate %(APP_NAME)s"
+msgstr ""
+
+#: ../../appengine/templates/home.html:53
+msgid "REST API"
+msgstr ""
+
+#: ../../appengine/templates/home.html:57
+msgid "Simple and documented REST API."
+msgstr ""
+
+#: ../../appengine/templates/home.html:61
+msgid " API Documentantion"
+msgstr ""
+
+#: ../../appengine/templates/languages.html:7
+msgid "Languages"
+msgstr ""
+
+#: ../../appengine/templates/languages.html:9
+#, python-format
+msgid ""
+"<p>\n"
+"          For now %(APP_NAME)s has only to available languages: en_US and"
+" pt_BR. But you can contribute\n"
+"          translating it for your language</p>\n"
+"          <p> The internationalization is made using\n"
+"            <a target=\"_blank\" "
+"href=\"http://babel.edgewall.org\">Babel</a>. To include a new language, "
+"add it on\n"
+"            <a target=\"_blank\"\n"
+"               "
+"href=\"https://github.com/renzon/pswdless/blob/master/src/settings.py\">settings.py</a>"
+"\n"
+"            and run <a target=\"_blank\" "
+"href=\"https://github.com/renzon/pswdless/blob/master/i18n/make_files.py\">make_files.py</a>"
+"\n"
+"            script. It will create a folder with the language name on\n"
+"            <a target=\"_blank\" "
+"href=\"https://github.com/renzon/pswdless/tree/master/i18n/locale\">locale</a>"
+" the\n"
+"            messages.po file. You use this file to make the translation. "
+"See\n"
+"            <a target=\"_blank\"\n"
+"               "
+"href=\"https://github.com/renzon/pswdless/blob/master/i18n/locale/pt_BR/LC_MESSAGES/messages.po\">pt_BR</a>"
+"\n"
+"            file as example.\n"
+"          </p>\n"
+"          <p>After finishing the translation, run make_file.py again to "
+"compile the new information.</p>\n"
+"          <p>If you become a translator and the %(APP_NAME)s begin to "
+"charge for the service in the future, you will\n"
+"            be on the VIP list so you will be able to use the service for"
+" free!</p>\n"
+"        "
+msgstr ""
+
+#: ../../appengine/templates/login_email.txt:1
+#, python-format
+msgid ""
+"Hi,\n"
+"\n"
+"You are receiving this automatic email because you've have asked the "
+"website %(site)s to log in.\n"
+"\n"
+"If you want log in, click or copy the following link in your browser:\n"
+"\n"
+"%(login_link)s\n"
+"\n"
+"If you haven't asked to log in, please disregard this email.\n"
+"\n"
+"Thanks,\n"
+"%(site)s"
+msgstr ""
+
+#: ../../appengine/templates/login_error.html:6
+#, python-format
+msgid "%(login_msg)s"
+msgstr ""
+
+#: ../../appengine/templates/login_error.html:9
+msgid " Something is wrong with the login process, sorry for inconvenience."
+msgstr ""
+
+#: ../../appengine/templates/login_error.html:13
+msgid ""
+"For security purpose, the login link has an expiration time and can be "
+"uses only one\n"
+"            time."
+msgstr ""
+
+#: ../../appengine/templates/login_error.html:18
+#, python-format
+msgid "Please, access %(domain)s and try log in again."
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:35
+#: ../../appengine/templates/base/base.html:79
+msgid "My Sites"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:37
+msgid "Type your site domain"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:38
+msgid "Add Domain"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:39
+msgid "Error(s):"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:41
+msgid "To edit your site's domain, click on it's Domain column."
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:43
+msgid "App Id"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:44
+msgid "Domain"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:45
+msgid "Token"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:46
+#: ../../appengine/templates/login/facebook/form.html:18
+#: ../../appengine/templates/login/passwordless/form.html:18
+#: ../../appengine/templates/permission/account_form.html:36
+msgid "Save"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:47
+msgid "Refresh"
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:48
+msgid ""
+"If you refresh the token, you will need to change this token on your "
+"site. Are you sure you want refresh it? "
+msgstr ""
+
+#: ../../appengine/templates/sites_mock.html:53
+msgid ""
+"Loading\n"
+"                  sites"
 msgstr ""
 
 #: ../../appengine/templates/admin/home.html:5
@@ -80,25 +468,27 @@ msgstr ""
 msgid "Sorry, page not found"
 msgstr ""
 
-#: ../../appengine/templates/base/base.html:56
-msgid "Courses"
+#: ../../appengine/templates/base/base.html:82
+msgid "API"
 msgstr ""
 
-#: ../../appengine/templates/base/base.html:59
+#: ../../appengine/templates/base/base.html:86
 msgid "Admin"
 msgstr ""
 
-#: ../../appengine/templates/base/base.html:76
-msgid "Account"
-msgstr ""
-
-#: ../../appengine/templates/base/base.html:80
+#: ../../appengine/templates/base/base.html:103
 msgid ""
 "\n"
-"                                        Logout"
+"                Account"
 msgstr ""
 
-#: ../../appengine/templates/base/base.html:88
+#: ../../appengine/templates/base/base.html:108
+msgid ""
+"\n"
+"                    Logout"
+msgstr ""
+
+#: ../../appengine/templates/base/base.html:117
 msgid "Login"
 msgstr ""
 
@@ -153,12 +543,6 @@ msgstr ""
 msgid "Type the app's token"
 msgstr ""
 
-#: ../../appengine/templates/login/facebook/form.html:18
-#: ../../appengine/templates/login/passwordless/form.html:18
-#: ../../appengine/templates/permission/account_form.html:36
-msgid "Save"
-msgstr ""
-
 #: ../../appengine/templates/login/passwordless/form.html:6
 msgid "Passworless App Form"
 msgstr ""
@@ -176,6 +560,31 @@ msgid ""
 "We will send you an email with the login link using\n"
 "                    <a "
 "href=\"https://pswdless.appspot.com/\">Passwordless</a>."
+msgstr ""
+
+#: ../../appengine/templates/multitenant/home.html:11
+msgid "A Full-Stack project for Google App Engine"
+msgstr ""
+
+#: ../../appengine/templates/multitenant/home.html:20
+msgid ""
+"Create CRUD code on\n"
+"                        <a href=\"https://cloud.google.com/products/app-"
+"engine/\">App Engine</a>"
+msgstr ""
+
+#: ../../appengine/templates/multitenant/home.html:26
+msgid ""
+" Check Courses App\n"
+"                            Out"
+msgstr ""
+
+#: ../../appengine/templates/multitenant/home.html:33
+msgid "Tekton is open source."
+msgstr ""
+
+#: ../../appengine/templates/multitenant/home.html:38
+msgid "Check Git Hub Out"
 msgstr ""
 
 #: ../../appengine/templates/permission/account_form.html:11
@@ -222,22 +631,6 @@ msgstr ""
 
 #: ../../appengine/templates/permission/home.html:22
 msgid "Unsecure"
-msgstr ""
-
-#: ../../appengine/templates/updown/home.html:7
-msgid "File Upload Form"
-msgstr ""
-
-#: ../../appengine/templates/updown/home.html:12
-msgid "Choose a file"
-msgstr ""
-
-#: ../../appengine/templates/updown/home.html:15
-msgid "Upload"
-msgstr ""
-
-#: ../../appengine/templates/updown/ok.html:7
-msgid "File Upload Finished"
 msgstr ""
 
 #: ../../venv/lib/python2.7/site-packages/gaeforms/base.py:48
@@ -429,5 +822,28 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ""
+#~ msgstr ""
+
+#~ msgid "Courses"
+#~ msgstr ""
+
+#~ msgid "Account"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "                                        Logout"
+#~ msgstr ""
+
+#~ msgid "File Upload Form"
+#~ msgstr ""
+
+#~ msgid "Choose a file"
+#~ msgstr ""
+
+#~ msgid "Upload"
+#~ msgstr ""
+
+#~ msgid "File Upload Finished"
 #~ msgstr ""
 

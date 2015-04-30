@@ -43,13 +43,16 @@ class SaveSite(Command):
 
 
 class FindUserSites(DestinationsSearch):
+    arc_class = SiteOwner
+
     def __init__(self, user):
-        super(FindUserSites, self).__init__(SiteOwner, user)
+        super(FindUserSites, self).__init__(user)
 
 
 class UpdateSite(DestinationsSearch):
+    arc_class = SiteOwner
     def __init__(self, user, site, domain=None, token=False):
-        super(UpdateSite, self).__init__(SiteOwner, user)
+        super(UpdateSite, self).__init__(user)
         self.token = token
         self.domain = domain
         self.site_key = to_node_key(site)
