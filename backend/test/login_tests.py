@@ -39,7 +39,7 @@ class CertifyCredentialsTests(GAETestCase):
         site = mommy.make_one(Site, domain='www.pswdless.appspot.com')
         site.put()
         cmd = CertifySiteCredentials(str(site.key.id()), site.token + "foo",
-                                     r'http://www.pswdless.appspot.com/foo?b=2&p=5')
+            r'http://www.pswdless.appspot.com/foo?b=2&p=5')
         self.assertRaises(CommandExecutionException, cmd.execute)
         self.assertIsNone(cmd.result)
         self.assertDictEqual({'site': 'Wrong site id or token'}, cmd.errors)
@@ -48,7 +48,7 @@ class CertifyCredentialsTests(GAETestCase):
         site = mommy.make_one(Site, domain='www.pswdless.appspot.com')
         site.put()
         cmd = CertifySiteCredentials(str(site.key.id()), site.token,
-                                     r'http://www.pswdless.appspot.com/foo?b=2&p=5')
+            r'http://www.pswdless.appspot.com/foo?b=2&p=5')
         cmd.execute()
         self.assertIsNotNone(cmd.result, str(cmd.errors))
         self.assertEqual(site.key, cmd.result.key)
@@ -78,7 +78,7 @@ class ValidateLoginCallTest(GAETestCase):
         site = mommy.make_one(Site, domain=domain)
         site.put()
         validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
-                                         user_email='foo@bar.com')
+            user_email='foo@bar.com')
         validate_cmd.execute()
         self.assertIsNotNone(validate_cmd.user, validate_cmd.errors)
         self.assertIsNotNone(validate_cmd.site, validate_cmd.errors)
@@ -92,7 +92,7 @@ class ValidateLoginCallTest(GAETestCase):
         create_login.execute()
         # time.sleep(3)  # giving time because eventual consistency
         validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
-                                         user.key.id())
+            user.key.id())
         self.assertRaises(CommandExecutionException, validate_cmd.execute)
         self.assertDictEqual({'spam': 'Spam not allowed'}, validate_cmd.errors)
 
@@ -108,7 +108,7 @@ class ValidateLoginCallTest(GAETestCase):
         lg.put()
 
         validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
-                                         user.key.id())
+            user.key.id())
         validate_cmd.execute()
         self.assertDictEqual({}, validate_cmd.errors)
 
@@ -122,7 +122,7 @@ class ValidateLoginCallTest(GAETestCase):
         lg.status = status
         lg.put()
         validate_cmd = ValidateLoginCall(site.key.id(), site.token, 'http://www.pswd.com/pswdless',
-                                         user.key.id())
+            user.key.id())
         validate_cmd.execute()
         self.assertDictEqual({}, validate_cmd.errors)
 
@@ -171,7 +171,7 @@ class SetupLoginTaskTests(GAETestCase):
         ndb.put_multi([site, user])
         login.setup_locale = Mock()
         setup_task = facade.setup_login_task(str(site.key.id()), site.token, 'http://pswdless.appspot.com/return',
-                                             str(user.key.id()), lang='pt_BR')
+            str(user.key.id()), lang='pt_BR')
         task_obj = Mock()
         task_cls = Mock(return_value=task_obj)
         login.TaskQueueCommand = task_cls
@@ -264,6 +264,10 @@ class SendEmailTests(GAETestCase):
         callback_flag.assert_called_once_with()
 
 
+class LoginStatusArcSearch(DestinationsSearch):
+    arc_class = LoginStatusArc
+
+
 class ValidateLoginLinkTests(GAETestCase):
     def _assert_error(self, token):
         validate_cmd = ValidateLoginLink(token, None)
@@ -304,7 +308,7 @@ class ValidateLoginLinkTests(GAETestCase):
         login_db = validate_cmd.result
         self.assertEqual(lg.key, login_db.key)
         self.assertEqual(login_db.status, LOGIN_CLICK)
-        search = DestinationsSearch(LoginStatusArc, login_db)
+        search = LoginStatusArcSearch(login_db)
         search.execute()
         self.assertEqual(1, len(search.result))
         lg_status = search.result[0]
