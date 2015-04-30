@@ -222,6 +222,14 @@ class ChangeLoginStatusTests(GAETestCase):
         self.assertEqual(LOGIN_EMAIL, login_status.label)
 
 
+class SingleLoginStatusArcSearch(SingleDestinationSearch):
+    arc_class = LoginStatusArc
+
+
+class SingleSiteUserSearch(SingleDestinationSearch):
+    arc_class = SiteUser
+
+
 class SendEmailTests(GAETestCase):
     def test_success(self):
         # Mocks
@@ -251,13 +259,13 @@ class SendEmailTests(GAETestCase):
         # Login changes
         login_db = login.key.get()
         self.assertEqual(LOGIN_EMAIL, login_db.status)
-        search = SingleDestinationSearch(LoginStatusArc, login)
+        search = SingleLoginStatusArcSearch(login)
         login_status = search()
         self.assertIsInstance(login_status, LoginStatus)
         self.assertEqual(LOGIN_EMAIL, login_status.label)
 
         # Site User creation
-        user_search = SingleDestinationSearch(SiteUser, site)
+        user_search = SingleSiteUserSearch(site)
         db_user = user_search()
         self.assertEqual(user.key, db_user.key)
 

@@ -192,15 +192,21 @@ class ChangeLoginStatus(NodeSearch):
 
 
 class SaveSiteUser(CreateSingleOriginArc):
+    arc_class = SiteUser
+
     def __init__(self, site, user):
-        super(SaveSiteUser, self).__init__(SiteUser, site, user)
+        super(SaveSiteUser, self).__init__(site, user)
+
+
+class LoginSiteSearch(SingleDestinationSearch):
+    arc_class = LoginSite
 
 
 class SendLoginEmail(CommandParallel):
     def __init__(self, login_id, callback):
         self.callback = callback
-        self.site_search = SingleDestinationSearch(LoginSite, login_id)
-        self.user_search = SingleDestinationSearch(LoginUser, login_id)
+        self.site_search = LoginSiteSearch(login_id)
+        self.user_search = LoginUserSearch(login_id)
         self.change_login = ChangeLoginStatus(login_id, LOGIN_EMAIL)
         super(SendLoginEmail, self).__init__(self.change_login, self.site_search, self.user_search)
 
