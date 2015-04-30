@@ -188,7 +188,8 @@ class SetupLoginTaskTests(GAETestCase):
         task_obj.commit.assert_called_once_with()
 
         def neighbor(cls):
-            search = DestinationsSearch(cls, lg)
+            DestinationsSearch.arc_class = cls  # To do: removing this because can cause side effects
+            search = DestinationsSearch(lg)
             search.execute()
             self.assertEqual(1, len(search.result), cls)
             return search.result[0]
