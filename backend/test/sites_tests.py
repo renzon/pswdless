@@ -34,6 +34,10 @@ class FindCurrentSiteTests(GAETestCase):
         self.assertEqual(site.key, find.result.key)
 
 
+class SitesSearch(DestinationsSearch):
+    arc_class = SiteOwner
+
+
 class SaveSiteTests(GAETestCase):
     def test_success(self, url='http://www.mydomain.com', domain='www.mydomain.com'):
         find_user = FindOrCreateUser('foo@bar.com')
@@ -44,7 +48,7 @@ class SaveSiteTests(GAETestCase):
         site = save_site.result
         self.assertEqual(domain, site.domain)
         self.assertIsNotNone(site.token)
-        search = DestinationsSearch(SiteOwner, user)
+        search = SitesSearch(user)
         search.execute()
         self.assertListEqual([site.key], [s.key for s in search.result])
 
