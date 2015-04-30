@@ -45,6 +45,8 @@ class LoginTests(GAETestCase):
         # self.assertNotIn('errors', ticket_dct, ticket_dct)
         # self.assertDictEqual({'ticket': str(Login.query().get(keys_only=True).id())}, ticket_dct)
 
+class CreateLoginArc(CreateArc):
+    arc_class=LoginUser
 
 class DetailTests(GAETestCase):
     def test_detail(self):
@@ -52,7 +54,7 @@ class DetailTests(GAETestCase):
         user = permission_facade.save_user_cmd('foo@bar.com', 'Renzo')()
         site = mommy.save_one(Site, domain='pswdless.appspost.com')
         login = mommy.save_one(Login, status=LOGIN_CLICK, hook='https://pswdless.appspost.com')
-        CreateArc(LoginUser, login, user)()
+        CreateLoginArc(login, user)()
         response = rest.detail(resp,
                                app_id=site.key.id(),
                                token=site.token,

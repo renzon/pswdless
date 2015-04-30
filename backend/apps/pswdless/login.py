@@ -281,15 +281,19 @@ class LogUserIn(DestinationsSearch):
         site = self.result[0]
         if site and not self.errors:
             log_user_in = facade.log_user_in(site.key.id(), site.token, self.ticket_id, self.response,
-                                             url_detail=self.url_detail)
+                url_detail=self.url_detail)
             log_user_in.execute()
             self.errors = log_user_in.errors
+
+
+class LoginUserSearch(SingleDestinationSearch):
+    arc_class = LoginUser
 
 
 class UserDetail(CommandParallel):
     def __init__(self, app_id, token, ticket_id):
         site_search = NodeSearch(app_id)
-        self.user_search = SingleDestinationSearch(LoginUser, ticket_id)
+        self.user_search = LoginUserSearch(ticket_id)
 
         super(UserDetail, self).__init__(site_search, CertifySiteToken(token, site_search),
                                          ValidateLoginStatus(ticket_id, LOGIN_CLICK, LOGIN_DETAIL), self.user_search)
