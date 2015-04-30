@@ -12,6 +12,10 @@ from routes.migration import tasks
 from tekton import router
 
 
+class CreateEmailUser(CreateArc):
+    arc_class = EmailUser
+
+
 class UserMigrationTests(GAETestCase):
     @patch('routes.migration.taskqueue')
     def test_success(self, taskqueue, users_len=3):
@@ -19,7 +23,7 @@ class UserMigrationTests(GAETestCase):
         pswd_users = [mommy.save_one(PswdUser) for i in range(users_len)]
         keys = [us.key for us in pswd_users]
         for e, u in izip(pswd_users_emails, pswd_users):
-            CreateArc(EmailUser, e, u)()
+            CreateEmailUser(e, u)()
 
         def task_add_mock(url):
             cursor = router.to_handler(url)[1][0]

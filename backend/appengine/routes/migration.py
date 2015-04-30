@@ -20,6 +20,10 @@ class UserSearch(ModelSearchCommand):
         super(UserSearch, self).__init__(PswdUser.query_by_creation(), 1, start_cursor, 0, False, False)
 
 
+class SingleEmailUserSearch(SingleOriginSearch):
+    arc_class = EmailUser
+
+
 @no_csrf
 @login_not_required
 def tasks(cursor=None):
@@ -27,7 +31,7 @@ def tasks(cursor=None):
     user = cmd()
     if user:
         user = user[0]
-        email = SingleOriginSearch(EmailUser, user)().email
+        email = SingleEmailUserSearch(user)().email
         MainUser(name=email, email=email, key=to_node_key(user), creation=user.creation).put()
         path = to_path(tasks, cmd.cursor.urlsafe())
         taskqueue.add(url=path)
